@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Link, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { View, Text, ScrollView, Dimensions, Alert} from "react-native";
+import { View, Text, ScrollView, Dimensions, Alert, Image } from "react-native";
 
+import images from "../../constants/images";
 import CustomButton from "../../components/CustomButton";
 import FormField from "../../components/FormField";
 import { createUser } from "@/lib/appwrite";
@@ -38,8 +39,14 @@ const SignUp = () => {
             minHeight: Dimensions.get("window").height - 100,
           }}
         >
+          <Image
+            source={images.logo}
+            className="w-[255px] h-[75px]"
+            resizeMode="contain"
+          />
+
           <Text className="text-2xl font-semibold text-white mt-10 font-semibold">
-            Welcome to Queue!
+            Welcome to Kiyou!
           </Text>
 
           <FormField
@@ -65,7 +72,7 @@ const SignUp = () => {
           />
 
           <CustomButton
-            title="Sign In"
+            title="Sign Up"
             handlePress={submit}
             containerStyles="mt-7"
           />
