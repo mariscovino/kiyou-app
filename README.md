@@ -1,50 +1,82 @@
-# Welcome to your Expo app 👋
+# Artist Performance Queue
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+## Project description
 
-## Get started
+<div style="text-align: justify"> 
 
-1. Install dependencies
+I have been a professional singer for more than 10 years, 
+and one of the things I most love about performing is interacting with my audience. To do that, 
+I enjoy getting song suggestions from the public. However, this process is often not as efficient
+as I would like. How it usually goes is:
 
-   ```bash
-   npm install
-   ```
+</div>
 
-2. Start the app
+1. I ask for song suggestions.
+2. The audience writes the desired song on a paper.
+3. The person gives it to the waiter.
+4. The waiter gives the paper to me.
+5. I evaluate the song suggestion.
+6. Add the song to the queue.
 
-   ```bash
-    npx expo start
-   ```
+<div style="text-align: justify"> 
 
-In the output, you'll find options to open the app in a
+Besides not being efficient, it is firstly not very ecological, given that lots of paper is "wasted"
+for it to happen. Secondly, people often ask me to play songs that I am not comfortable playing, 
+that are not in my repertoire, or that I already played previously. Still I cannot give this feedback 
+to the person that asked for it.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+With these issues and a need in mind, I decided to create an Artist Performance Queue. The program will
+have different windows: audience windows, and an artist window. 
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+The audience window will allow the user to request songs for the artist. If the song was already played,
+it will automatically be denied. If that is not the case, the songs will then automatically
+be sent to the artist window. 
 
-## Get a fresh project
+The artist window will allow the artist to deny or accept song requests, and list songs that were already played. 
+If the song is denied, the artist
+will have the option to give a feedback message. For example: "Sorry! This song is not on my repertoire, 
+but I will try to learn it for next time!". If the song is accepted, the song will enter the queue, and 
+the audience will receive the message "Your song request entered xxx artist's song queue".
 
-When you're ready, run:
+The program will be used by artists like me and the audience present at the performance. With the program, 
+song requests will be way more efficient.
 
-```bash
-npm run reset-project
-```
+## User stories
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+**As the audience user, I would like to:**
+- Request a song.
+- If my song was accepted, receive feedback if it was added to the queue.
+- If my song was already played, receive feedback that it was already played.
+- If my song is already in the queue, receive feedback that it is already in the queue.
+- If my song was denied by the artist, receive the artist's feedback giving a reason why it was denied.
+- Save the songs I already requested during that performance.
+- Reset my song requests if I am at a new performance.
 
-## Learn more
+**As the artist user, I would like to:**
+- Accept or deny song requests (add songs to the song queue or not).
+- View the song queue.
+- Provide feedback to the audience if I reject a song request.
+- Keep track of the songs I already played.
+- Save the song queue and songs I already played during that performance.
+- Reset song queue if I am at a new performance.
 
-To learn more about developing your project with Expo, look at the following resources:
+## Phase 4: Task 3
+Given the UML diagram for the final version of the code, I think the first thing that one can notice is the large 
+amount of classes.
+With this in mind, I think the first refactoring I would perform if I had more time to work on the project would maybe 
+be to, in the UI package, unite all the artist actions in one ArtistWindow class, and unite all the audience actions in
+one AudienceWindow class. For example uniting DenySong, AcceptSong etc with ArtistMain. This would make my code more 
+readable and less confusing. With everything separated into different classes things can get hard to find. However, I 
+would keep the abstract classes from the UI, such as QueueWindows and EnterSong, since they help avoid duplicate code.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+Another refactoring I would do would be overriding equals and hashcode in the Song class. Since I wrote this code 
+before knowing this was possible, I have a lot of duplicate code to find songs in a list, especially in the model 
+package.
 
-## Join the community
+Finally, the last refactoring I would do would be to further abstract all methods that need to find something in a list.
+Whether it's finding a feedback or song in a LinkedList of Feedback or Song, all methods that require this have the same
+idea: iterating over a for loop until the desired Song or feedback is found. So, I would create a function that returns 
+true when Object o is found in LinkedList<Object> l. Then, I would use this in the condition of any if statements in
+functions that do something when a Song or Feedback was found in a list.
 
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+</div>
