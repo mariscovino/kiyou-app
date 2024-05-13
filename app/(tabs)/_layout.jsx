@@ -68,6 +68,12 @@ const TabLayout = () => {
             ),
           }}
         />
+        <Tabs.Screen 
+          name="(screens)"
+          options={{
+            href: null,
+            headerShown: false}}
+        />
       </Tabs>
     </>
   );

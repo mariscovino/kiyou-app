@@ -4,16 +4,15 @@ import SearchInput from "../../components/SearchInput";
 import ConcertCard from '../../components/ConcertCard'
 import images from "../../constants/images";
 import CustomButton from '@/components/CustomButton';
-import { useState } from 'react';
 import useAppwrite from "../../lib/useAppwrite";
 import { getUserConcerts } from '../../lib/appwrite';
 import { useGlobalContext } from "../../context/GlobalProvider";
+import { router } from 'expo-router';
 
 const Home = () => {
   const { user } = useGlobalContext();
-  const { data: concerts } = useAppwrite(() => getUserConcerts(user.$id,user.$name));
-
-  const submit = async () => {}
+  const { data: concerts } = useAppwrite(() => getUserConcerts(user.username));
+  const submit = async () => {router.push("../(tabs)/(screens)/new-concert") }
 
   return (
     <SafeAreaView className='bg-primary h-full'>
