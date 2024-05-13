@@ -7,9 +7,11 @@ import images from "../../constants/images";
 import CustomButton from "../../components/CustomButton";
 import FormField from "../../components/FormField";
 import { createUser } from "@/lib/appwrite";
+import { useGlobalContext } from "../../context/globalContextProvider";
 
 const SignUp = () => {
-  const [setIsSubmitting] = useState(false);
+  const { setUser, setIsLogged } = useGlobalContext();
+  const [isSubmitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
     username: "",
     email: "",
@@ -21,12 +23,17 @@ const SignUp = () => {
       Alert.alert("Error", "Please fill in all fields");
     }
 
+    setSubmitting(true);
     try {
       const result = await createUser(form.email, form.password, form.username);
+      setUser(result);
+      setIsLogged(true);
 
       router.replace("/home");
     } catch (error) {
       Alert.alert("Error", error.message);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -83,7 +90,7 @@ const SignUp = () => {
             </Text>
             <Link
               href="/sign-in"
-              className="text-lg font-semibold text-[#FF9C01]"
+              className="text-lg font-semibold text-secondary-200"
             >
               SignIn
             </Link>

@@ -4,11 +4,11 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: "#161622",
+        primary: "#040404",
         secondary: {
-          DEFAULT: "#FF9C01",
-          100: "#FF9001",
-          200: "#FF8E01",
+          DEFAULT: "#efbe0a",
+          100: "#f50b2a",
+          200: "#f50b2a",
         },
         black: {
           DEFAULT: "#000",

@@ -5,6 +5,8 @@ import menu from "../assets/icons/menu.png";
 import logout from "../assets/icons/logout.png";
 import eyeHide from "../assets/icons/eye-hide.png";
 import eye from "../assets/icons/eye.png";
+import search from "../assets/icons/search.png"
+import concert from "../assets/icons/concert.png"
 
 export default {
   home,
@@ -14,4 +16,6 @@ export default {
   logout,
   eyeHide,
   eye,
+  search,
+  concert
 };
