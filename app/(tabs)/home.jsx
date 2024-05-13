@@ -1,5 +1,4 @@
-import React from 'react'
-import { StyleSheet, Text, View, FlatList, Image } from 'react-native'
+import { Text, View, FlatList, Image } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import SearchInput from "../../components/SearchInput";
 import ConcertCard from '../../components/ConcertCard'
@@ -7,14 +6,12 @@ import images from "../../constants/images";
 import CustomButton from '@/components/CustomButton';
 import { useState } from 'react';
 import useAppwrite from "../../lib/useAppwrite";
-import { getUserConcerts } from '@/lib/appwrite';
+import { getUserConcerts } from '../../lib/appwrite';
+import { useGlobalContext } from "../../context/GlobalProvider";
 
 const Home = () => {
-  const { data: concerts } = useAppwrite(() => getUserConcerts("663edad10025dbd9f622","mscovino"));
-
-  const [form, setForm] = useState({
-    new: "",
-  });
+  const { user } = useGlobalContext();
+  const { data: concerts } = useAppwrite(() => getUserConcerts(user.$id,user.$name));
 
   const submit = async () => {}
 
@@ -22,7 +19,7 @@ const Home = () => {
     <SafeAreaView className='bg-primary h-full'>
       <FlatList
         data={concerts}
-        keyExtractor={(item) => item.$id}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <ConcertCard
             name={item.name}
@@ -34,7 +31,7 @@ const Home = () => {
             <View className='justify-between items-start flex-row mb-6'>
               <View>
                 <Text className='font-medium text-sm text-gray-100'>Welcome Back</Text>
-                <Text className='text-2xl font-semibold text-secondary-200'>mscovino</Text>
+                <Text className='text-2xl font-semibold text-secondary-200'>{user.username}</Text>
               </View>
 
               <View className="mt-1.5">
@@ -66,5 +63,3 @@ const Home = () => {
 }
 
 export default Home
-
-const styles = StyleSheet.create({})

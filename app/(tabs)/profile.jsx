@@ -6,9 +6,11 @@ import { icons } from "../../constants";
 import useAppwrite from "../../lib/useAppwrite";
 import { getUserConcerts } from "../../lib/appwrite";
 import InfoBox from "../../components/InfoBox";
+import { useGlobalContext } from "../../context/GlobalProvider";
 
 const Profile = () => {
-  const { data: concerts } = useAppwrite(() => getUserConcerts("663edad10025dbd9f622","mscovino"));
+  const { user } = useGlobalContext();
+  const { data: concerts } = useAppwrite(() => getUserConcerts(user.$id, user.$name));
   
   const logout = async () => {
     await signOut();
@@ -34,14 +36,14 @@ const Profile = () => {
 
             <View className="w-16 h-16 border border-secondary rounded-lg flex justify-center items-center">
               <Image
-                source={{ uri: "https://cloud.appwrite.io/v1/avatars/initials?name=mscovino&project=663e865c003df7277444"}}
+                source={{ uri: user.avatar }}
                 className="w-[90%] h-[90%] rounded-lg"
                 resizeMode="cover"
               />
             </View>
 
             <InfoBox
-              title={"mscovino"}
+              title={user.username}
               containerStyles="mt-5"
               titleStyles="text-lg"
             />

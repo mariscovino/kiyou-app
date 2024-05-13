@@ -7,7 +7,7 @@ import images from "../../constants/images";
 import CustomButton from "../../components/CustomButton";
 import FormField from "../../components/FormField";
 import { createUser } from "@/lib/appwrite";
-import { useGlobalContext } from "../../context/globalContextProvider";
+import { useGlobalContext } from "../../context/GlobalProvider";
 
 const SignUp = () => {
   const { setUser, setIsLogged } = useGlobalContext();

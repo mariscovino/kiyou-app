@@ -7,7 +7,8 @@ import images from "../../constants/images";
 import CustomButton from "../../components/CustomButton";
 import FormField from "../../components/FormField";
 import { signIn } from "@/lib/appwrite";
-import { useGlobalContext } from "../../context/globalContextProvider";
+import { getCurrentUser } from "@/lib/appwrite";
+import { useGlobalContext } from "../../context/GlobalProvider";
 
 const SignIn = () => {
   const { setUser, setIsLogged } = useGlobalContext();
@@ -29,8 +30,7 @@ const SignIn = () => {
       const result = await getCurrentUser();
       setUser(result);
       setIsLogged(true);
-
-      Alert.alert("Success", "User signed in successfully");
+      
       router.replace("/home");
     } catch (error) {
       Alert.alert("Error", error.message);
