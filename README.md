@@ -41,42 +41,4 @@ the audience will receive the message "Your song request entered xxx artist's so
 The program will be used by artists like me and the audience present at the performance. With the program, 
 song requests will be way more efficient.
 
-## User stories
-
-**As the audience user, I would like to:**
-- Request a song.
-- If my song was accepted, receive feedback if it was added to the queue.
-- If my song was already played, receive feedback that it was already played.
-- If my song is already in the queue, receive feedback that it is already in the queue.
-- If my song was denied by the artist, receive the artist's feedback giving a reason why it was denied.
-- Save the songs I already requested during that performance.
-- Reset my song requests if I am at a new performance.
-
-**As the artist user, I would like to:**
-- Accept or deny song requests (add songs to the song queue or not).
-- View the song queue.
-- Provide feedback to the audience if I reject a song request.
-- Keep track of the songs I already played.
-- Save the song queue and songs I already played during that performance.
-- Reset song queue if I am at a new performance.
-
-## Phase 4: Task 3
-Given the UML diagram for the final version of the code, I think the first thing that one can notice is the large 
-amount of classes.
-With this in mind, I think the first refactoring I would perform if I had more time to work on the project would maybe 
-be to, in the UI package, unite all the artist actions in one ArtistWindow class, and unite all the audience actions in
-one AudienceWindow class. For example uniting DenySong, AcceptSong etc with ArtistMain. This would make my code more 
-readable and less confusing. With everything separated into different classes things can get hard to find. However, I 
-would keep the abstract classes from the UI, such as QueueWindows and EnterSong, since they help avoid duplicate code.
-
-Another refactoring I would do would be overriding equals and hashcode in the Song class. Since I wrote this code 
-before knowing this was possible, I have a lot of duplicate code to find songs in a list, especially in the model 
-package.
-
-Finally, the last refactoring I would do would be to further abstract all methods that need to find something in a list.
-Whether it's finding a feedback or song in a LinkedList of Feedback or Song, all methods that require this have the same
-idea: iterating over a for loop until the desired Song or feedback is found. So, I would create a function that returns 
-true when Object o is found in LinkedList<Object> l. Then, I would use this in the condition of any if statements in
-functions that do something when a Song or Feedback was found in a list.
-
 </div>
