@@ -1,4 +1,4 @@
-# Artist Performance Queue
+# Kiyou
 
 ## Project description
 
@@ -25,8 +25,7 @@ for it to happen. Secondly, people often ask me to play songs that I am not comf
 that are not in my repertoire, or that I already played previously. Still I cannot give this feedback 
 to the person that asked for it.
 
-With these issues and a need in mind, I decided to create an Artist Performance Queue. The program will
-have different windows: audience windows, and an artist window. 
+With these issues and a need in mind, I decided to create Kiyou.
 
 The audience window will allow the user to request songs for the artist. If the song was already played,
 it will automatically be denied. If that is not the case, the songs will then automatically
