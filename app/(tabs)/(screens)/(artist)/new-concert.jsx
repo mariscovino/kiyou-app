@@ -60,15 +60,18 @@ const NewArtist = () => {
               containerStyles="mt-7"
             />
 
-            <Text className="text-lg text-gray-100 font-regular">
-              Go back?
-            </Text>
-            <Link
-              href="/screens/audience/new-concert.jsx"
-              className="text-lg font-semibold text-secondary-200"
-            >
-              New concert - Audience
-            </Link>
+            <View className="flex justify-center flex-row">
+              <Text className="text-lg text-gray-100 font-regular">
+                Go back?
+              </Text>
+              <Text> </Text>
+              <Link
+                href="/../../(screens)/(audience)/new-concert"
+                className="text-lg font-semibold text-secondary-200"
+              >
+                New concert - Audience
+              </Link>
+            </View>
           </View>
       </SafeAreaView>
     )
