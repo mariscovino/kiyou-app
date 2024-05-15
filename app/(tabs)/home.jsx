@@ -1,62 +1,74 @@
-import { Text, View, FlatList, Image } from 'react-native'
+import { Text, FlatList, ScrollView, Alert } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import SearchInput from "../../components/SearchInput";
 import ConcertCard from '../../components/ConcertCard'
-import images from "../../constants/images";
-import CustomButton from '@/components/CustomButton';
 import useAppwrite from "../../lib/useAppwrite";
-import { getUserConcerts } from '../../lib/appwrite';
+import { getAllConcerts, createConcert, addConcert } from '../../lib/appwrite';
 import { useGlobalContext } from "../../context/GlobalProvider";
 import { router } from 'expo-router';
+import { useState } from 'react';
+import Header from '@/components/Header'
 
 const Home = () => {
   const { user } = useGlobalContext();
-  const { data: concerts } = useAppwrite(() => getUserConcerts(user.username));
-  const submit = async () => {router.push("../(tabs)/(screens)/new-concert") }
+  const { data: concerts } = useAppwrite(() => getAllConcerts(user.username));
+  const [form, setForm] = useState({
+    name: "",
+    pin: "",
+  });
+
+  const create = async () => {
+    if (form.name != "") {
+      try {
+        await createConcert(form.name, "mscovino");
+        
+        router.replace("/../../(screens)/(artist)/concert");
+      } catch (error) {
+        Alert.alert("Error", error.message);
+      }
+    } else {
+      Alert.alert("Error", "Please fill in all fields");
+    }
+  };
+
+  const join = async () => {
+    if (form.pin != "") {
+      try {
+        await addConcert(parseInt(form.pin), user.username);
+        
+        router.replace("/../../(screens)/(audience)/concert");
+      } catch (error) {
+        Alert.alert("Error", error.message);
+      }
+    } else {
+      Alert.alert("Error", "Please fill in all fields");
+    }
+  };
 
   return (
     <SafeAreaView className='bg-primary h-full'>
-      <FlatList
-        data={concerts}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <ConcertCard
-            name={item.name}
-            artist={item.artist}
-          />
-        )}
-        ListHeaderComponent={() => (
-          <View className='my-6 px-4 space-y-6'>
-            <View className='justify-between items-start flex-row mb-6'>
-              <View>
-                <Text className='font-medium text-sm text-gray-100'>Welcome Back</Text>
-                <Text className='text-2xl font-semibold text-secondary-200'>{user.username}</Text>
-              </View>
+      <ScrollView className='my-6 px-4'>
+          <Header username={user.username} />
 
-              <View className="mt-1.5">
-                <Image
-                  source={images.logo}
-                  className="w-[150px] h-[35px]"
-                  resizeMode="contain"
-                />
-              </View>
-            </View>
+      <SearchInput />
 
-            <SearchInput />
-
-            <View className="w-full flex-1">
-              <Text className="text-lg font-regular text-gray-100 mb-3">
-                Your concerts:
-              </Text>
-            </View>
-            <CustomButton
-            title="New concert"
-            handlePress={submit}
-            containerStyles="mt-7 my-4"
-          />
-          </View>
-        )}
+        <FlatList
+          data={concerts}
+          keyExtractor={(item) => item.id}
+          scrollEnabled={false}
+          renderItem={({ item }) => (
+            <ConcertCard
+              name={item.name}
+              artist={item.artist}
+            />
+          )}
+          ListHeaderComponent={() => (
+            <Text className="text-lg font-semibold text-gray-100 my-6">
+              All concerts:
+            </Text>
+            )}
         />
+      </ScrollView>
     </SafeAreaView>
   )
 }

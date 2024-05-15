@@ -7,6 +7,8 @@ import eyeHide from "../assets/icons/eye-hide.png";
 import eye from "../assets/icons/eye.png";
 import search from "../assets/icons/search.png"
 import concert from "../assets/icons/concert.png"
+import artist from "../assets/icons/artist.png"
+import audience from "../assets/icons/audience.png"
 
 export default {
   home,
@@ -17,5 +19,7 @@ export default {
   eyeHide,
   eye,
   search,
-  concert
+  concert,
+  artist,
+  audience
 };

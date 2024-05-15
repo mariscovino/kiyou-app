@@ -54,6 +54,36 @@ const TabLayout = () => {
           }}
         />
         <Tabs.Screen
+          name="(audience)"
+          options={{
+            title: "Audience",
+            headerShown: false,
+            tabBarIcon: ({ color, focused }) => (
+              <TabIcon
+                icon={icons.audience}
+                color={color}
+                name="Audience"
+                focused={focused}
+              />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="(artist)"
+          options={{
+            title: "Artist",
+            headerShown: false,
+            tabBarIcon: ({ color, focused }) => (
+              <TabIcon
+                icon={icons.artist}
+                color={color}
+                name="Artist"
+                focused={focused}
+              />
+            ),
+          }}
+        />
+        <Tabs.Screen
           name="profile"
           options={{
             title: "Profile",
@@ -67,12 +97,6 @@ const TabLayout = () => {
               />
             ),
           }}
-        />
-        <Tabs.Screen 
-          name="(screens)"
-          options={{
-            href: null,
-            headerShown: false}}
         />
       </Tabs>
     </>

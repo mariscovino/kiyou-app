@@ -3,13 +3,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { View, Image, TouchableOpacity } from "react-native";
 import { icons } from "../../constants";
 import useAppwrite from "../../lib/useAppwrite";
-import { getUserConcerts, signOut } from "../../lib/appwrite";
+import { getAllConcerts, signOut } from "../../lib/appwrite";
 import InfoBox from "../../components/InfoBox";
 import { useGlobalContext } from "../../context/GlobalProvider";
 
 const Profile = () => {
   const { user, setUser, setIsLogged } = useGlobalContext();
-  const { data: concerts } = useAppwrite(() => getUserConcerts(user.username));
+  const { data: concerts } = useAppwrite(() => getAllConcerts(user.username));
   
   const logout = async () => {
     await signOut();
