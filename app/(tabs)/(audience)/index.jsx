@@ -12,7 +12,7 @@ import { useState } from 'react';
 import Header from '../../../components/Header';
 
 const Audience = () => {
-    const { user } = useGlobalContext();
+    const { user, setConcert } = useGlobalContext();
     const { data: concerts } = useAppwrite(() => getAudienceConcerts(user.username));
     const [form, setForm] = useState({
       pin: "",
@@ -21,9 +21,9 @@ const Audience = () => {
     const join = async () => {
         if (form.pin != "") {
             try {
-            await addConcert(parseInt(form.pin), user.username);
-            
-            router.replace("/../../(screens)/(audience)/concert");
+            const concert = await addConcert(parseInt(form.pin), user.username);
+            setConcert(concert);
+            router.replace("/../(audience)/concert");
             } catch (error) {
             Alert.alert("Error", error.message);
             }

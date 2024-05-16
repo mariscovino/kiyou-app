@@ -12,7 +12,7 @@ import FormField from '@/components/FormField';
 import { useState } from 'react';
 
 const Artist = () => {
-    const { user } = useGlobalContext();
+    const { user, setConcert } = useGlobalContext();
     const { data: concerts } = useAppwrite(() => getArtistConcerts(user.username));
     const [form, setForm] = useState({
       name: "",
@@ -21,9 +21,9 @@ const Artist = () => {
     const create = async () => {
       if (form.name != "") {
         try {
-          await createConcert(form.name, "mscovino");
-          
-          router.replace("/../../(screens)/(artist)/concert");
+          const concert = await createConcert(form.name, "mscovino");
+          setConcert(concert);
+          router.replace("/../(artist)/concert");
         } catch (error) {
           Alert.alert("Error", error.message);
         }
