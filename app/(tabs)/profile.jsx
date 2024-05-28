@@ -2,17 +2,15 @@ import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { View, Image, TouchableOpacity } from "react-native";
 import { icons } from "../../constants";
-import useAppwrite from "../../lib/useAppwrite";
-import { getAllConcerts, signOut } from "../../lib/appwrite";
 import InfoBox from "../../components/InfoBox";
 import { useGlobalContext } from "../../context/GlobalProvider";
 
 const Profile = () => {
   const { user, setUser, setIsLogged } = useGlobalContext();
-  const { data: concerts } = useAppwrite(() => getAllConcerts(user.username));
+  const { data: concerts } = null;
   
   const logout = async () => {
-    await signOut();
+    // await signOut();
     setUser(null);
     setIsLogged(false);
 
@@ -35,14 +33,14 @@ const Profile = () => {
 
             <View className="w-16 h-16 border border-secondary rounded-lg flex justify-center items-center">
               <Image
-                source={{ uri: user.avatar }}
+                source={{ uri: user?.avatar }}
                 className="w-[90%] h-[90%] rounded-lg"
                 resizeMode="cover"
               />
             </View>
 
             <InfoBox
-              title={user.username}
+              title={user?.username}
               containerStyles="mt-5"
               titleStyles="text-lg"
             />

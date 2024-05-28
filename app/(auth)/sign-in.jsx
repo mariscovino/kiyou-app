@@ -2,13 +2,11 @@ import { useState } from "react";
 import { Link, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { View, Text, ScrollView, Dimensions, Alert, Image } from "react-native";
-
 import images from "../../constants/images";
 import CustomButton from "../../components/CustomButton";
 import FormField from "../../components/FormField";
-import { signIn } from "@/lib/appwrite";
-import { getCurrentUser } from "@/lib/appwrite";
 import { useGlobalContext } from "../../context/GlobalProvider";
+import client from '@/api/client.js'
 
 const SignIn = () => {
   const { setUser, setIsLogged } = useGlobalContext();
@@ -26,17 +24,24 @@ const SignIn = () => {
     setSubmitting(true);
 
     try {
-      await signIn(form.email, form.password);
-      const result = await getCurrentUser();
-      setUser(result);
-      setIsLogged(true);
+      const response = await client.post('/users/signIn', form);
+      console.log(response)
+
+      // const result = await client.get('/users/getUser', 
+      // {
+      //   "email": form.email
+      // });
+      
+      // setUser(result);
+      // setIsLogged(true);
       
       router.replace("/home");
     } catch (error) {
-      Alert.alert("Error", error.message);
-    } finally {
-      setSubmitting(false);
+      Alert.alert("Error", error.response.data);
     }
+    // } finally {
+    //   setSubmitting(false);
+    // }
   };
 
   return (

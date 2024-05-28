@@ -2,20 +2,19 @@ import { useState } from "react";
 import { Link, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { View, Text, ScrollView, Dimensions, Alert, Image } from "react-native";
-
 import images from "../../constants/images";
 import CustomButton from "../../components/CustomButton";
 import FormField from "../../components/FormField";
-import { createUser } from "@/lib/appwrite";
 import { useGlobalContext } from "../../context/GlobalProvider";
 
 const SignUp = () => {
   const { setUser, setIsLogged } = useGlobalContext();
   const [isSubmitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
-    username: "",
+    name: "",
+    last_name: "",
     email: "",
-    password: "",
+    password: ""
   });
 
   const submit = async () => {
@@ -25,8 +24,8 @@ const SignUp = () => {
 
     setSubmitting(true);
     try {
-      const result = await createUser(form.email, form.password, form.username);
-      setUser(result);
+      // const result = await createUser(form.name, form.last_name, form.email, form.password);
+      //setUser(result);
       setIsLogged(true);
 
       router.replace("/home");
@@ -57,12 +56,19 @@ const SignUp = () => {
           </Text>
 
           <FormField
-            title="Username"
-            value={form.username}
-            handleChangeText={(e) => setForm({ ...form, username: e })}
+            title="Name"
+            value={form.name}
+            handleChangeText={(e) => setForm({ ...form, name: e })}
             otherStyles="mt-7"
-            keyboardType="email-address"
           />
+
+          <FormField
+            title="Last name"
+            value={form.last_name}
+            handleChangeText={(e) => setForm({ ...form, last_name: e })}
+            otherStyles="mt-7"
+          />
+
           <FormField
             title="Email"
             value={form.email}

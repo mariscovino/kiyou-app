@@ -1,10 +1,8 @@
 import { Text, FlatList, ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import ConcertCard from '@/components/ConcertCard'
-import useAppwrite from "@/lib/useAppwrite";
 import Header from '../../../components/Header';
 import { useGlobalContext } from "@/context/GlobalProvider";
-import { getConcert } from '@/lib/appwrite'
 
 const Concert = () => {
   const { user, concert } = useGlobalContext();

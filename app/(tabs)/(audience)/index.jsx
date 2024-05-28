@@ -3,8 +3,6 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import SearchInput from "@/components/SearchInput";
 import ConcertCard from '@/components/ConcertCard'
 import CustomButton from '@/components/CustomButton';
-import useAppwrite from "@/lib/useAppwrite";
-import { getAudienceConcerts, addConcert } from '@/lib/appwrite';
 import { useGlobalContext } from "@/context/GlobalProvider";
 import { router } from 'expo-router';
 import FormField from '@/components/FormField';
@@ -13,7 +11,7 @@ import Header from '../../../components/Header';
 
 const Audience = () => {
     const { user, setConcert } = useGlobalContext();
-    const { data: concerts } = useAppwrite(() => getAudienceConcerts(user.username));
+    const { data: concerts } = null;
     const [form, setForm] = useState({
       pin: "",
     });
@@ -21,7 +19,7 @@ const Audience = () => {
     const join = async () => {
         if (form.pin != "") {
             try {
-            const concert = await addConcert(parseInt(form.pin), user.username);
+            const concert = null;
             setConcert(concert);
             router.replace("/../(audience)/concert");
             } catch (error) {

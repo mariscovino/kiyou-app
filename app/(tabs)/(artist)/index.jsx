@@ -3,9 +3,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import SearchInput from "@/components/SearchInput";
 import ConcertCard from '@/components/ConcertCard'
 import CustomButton from '@/components/CustomButton';
-import useAppwrite from "@/lib/useAppwrite";
 import Header from '../../../components/Header';
-import { getArtistConcerts, createConcert } from '@/lib/appwrite';
 import { useGlobalContext } from "@/context/GlobalProvider";
 import { router } from 'expo-router';
 import FormField from '@/components/FormField';
@@ -13,7 +11,7 @@ import { useState } from 'react';
 
 const Artist = () => {
     const { user, setConcert } = useGlobalContext();
-    const { data: concerts } = useAppwrite(() => getArtistConcerts(user.username));
+    const { data: concerts } = null;
     const [form, setForm] = useState({
       name: "",
     });
@@ -21,7 +19,7 @@ const Artist = () => {
     const create = async () => {
       if (form.name != "") {
         try {
-          const concert = await createConcert(form.name, "mscovino");
+          const concert = null;
           setConcert(concert);
           router.replace("/../(artist)/concert");
         } catch (error) {
