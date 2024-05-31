@@ -1,17 +1,19 @@
 import { Text, View, FlatList, ScrollView, Alert } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import SearchInput from "@/components/SearchInput";
+import SearchInput from "@/components/SearchInput"
 import ConcertCard from '@/components/ConcertCard'
-import CustomButton from '@/components/CustomButton';
-import Header from '../../../components/Header';
-import { useGlobalContext } from "@/context/GlobalProvider";
-import { router } from 'expo-router';
-import FormField from '@/components/FormField';
-import { useState } from 'react';
+import CustomButton from '@/components/CustomButton'
+import Header from '../../../components/Header'
+import { useGlobalContext } from "@/context/GlobalProvider"
+import { router } from 'expo-router'
+import FormField from '@/components/FormField'
+import { useState } from 'react'
+import client from '@/api/client.js'
+import getData from '@/api/getData.js'
 
 const Artist = () => {
     const { user, setConcert } = useGlobalContext();
-    const { data: concerts } = null;
+    const { data: concerts } = getData('/users/getArtistConcerts', {"email": user.email});
     const [form, setForm] = useState({
       name: "",
     });
@@ -19,7 +21,7 @@ const Artist = () => {
     const create = async () => {
       if (form.name != "") {
         try {
-          const concert = null;
+          const concert = client.post('/users/createConcert', {"concert_name": form.name, "email": form.email})
           setConcert(concert);
           router.replace("/../(artist)/concert");
         } catch (error) {
@@ -33,7 +35,7 @@ const Artist = () => {
     return (
       <SafeAreaView className='bg-primary h-full'>
         <ScrollView className='my-6 px-4 space-y-6'>
-            <Header username={user.username} />
+            <Header username={user.name} />
   
             <SearchInput />
   
@@ -59,13 +61,13 @@ const Artist = () => {
               />
   
           <FlatList
-            data={concerts}
-            keyExtractor={(item) => item.id}
+            data={[concerts]}
+            keyExtractor={(item) => item.concert_id}
             scrollEnabled={false}
             renderItem={({ item }) => (
               <ConcertCard
-                name={item.name}
-                artist={item.artist}
+                name={item.concert_name}
+                artist={item.artist_email}
               />
             )}
             ListHeaderComponent={() => (

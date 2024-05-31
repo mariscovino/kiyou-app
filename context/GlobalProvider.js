@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import client from "@/api/client";
 
 const GlobalContext = createContext();
 export const useGlobalContext = () => useContext(GlobalContext);
@@ -9,24 +11,30 @@ const GlobalProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [concert, setConcert] = useState(null)
 
-  // useEffect(() => {
-  //   getCurrentUser()
-  //     .then((res) => {
-  //       if (res) {
-  //         setIsLogged(true);
-  //         setUser(res);
-  //       } else {
-  //         setIsLogged(false);
-  //         setUser(null);
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     })
-  //     .finally(() => {
-  //       setLoading(false);
-  //     });
-  // }, []);
+  const fetchUser = async () => {
+    setLoading(true);
+
+    try {
+      const email = await AsyncStorage.getItem('email');
+      
+      if (email != null) {
+        const user = await client.post('/users/getUser', { "email": email });
+        setUser(user.data);
+        setIsLogged(true);
+      } else {
+        setUser({});
+        setIsLogged(false);
+      }
+    } catch (error) {
+      console.log(error.message)
+    }
+
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    fetchUser()
+  }, [])
 
   return (
     <GlobalContext.Provider

@@ -37,15 +37,10 @@ const Welcome = () => {
             handlePress={() => router.push("/sign-in")}
             containerStyles="w-full mt-7"
           />
-          <CustomButton
-            title="Continue as guest"
-            handlePress={() => router.push("/home")}
-            containerStyles="w-full mt-7"
-          />
         </View>
       </ScrollView>
 
-      <StatusBar backgroundColor="#190208" style="light" />
+      <StatusBar backgroundColor="primary" style="light" />
     </SafeAreaView>
   );
 };

@@ -4,13 +4,15 @@ import { View, Image, TouchableOpacity } from "react-native";
 import { icons } from "../../constants";
 import InfoBox from "../../components/InfoBox";
 import { useGlobalContext } from "../../context/GlobalProvider";
+import client from '@/api/client.js';
+import getData from '@/api/getData.js'
 
 const Profile = () => {
   const { user, setUser, setIsLogged } = useGlobalContext();
-  const { data: concerts } = null;
+  const { data: concerts } = getData('/users/getAllConcerts', {"email": user.email});
   
   const logout = async () => {
-    // await signOut();
+    client.post('/users/signOut', {"email": user.email})
     setUser(null);
     setIsLogged(false);
 
@@ -40,7 +42,7 @@ const Profile = () => {
             </View>
 
             <InfoBox
-              title={user?.username}
+              title={user?.name}
               containerStyles="mt-5"
               titleStyles="text-lg"
             />

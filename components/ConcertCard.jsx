@@ -1,8 +1,10 @@
 import { View, Text, TouchableOpacity, Image } from "react-native";
 
 import { icons } from "../constants";
+import getData from "@/api/getData";
 
 const ConcertCard = ({ name, artist, handlePress }) => {
+  const artistInfo = getData('/users/getUser', {"email": artist}).data;
 
   return (
     <TouchableOpacity 
@@ -29,7 +31,7 @@ const ConcertCard = ({ name, artist, handlePress }) => {
               className="text-xs text-gray-100 font-regular"
               numberOfLines={1}
             >
-              Artist: {artist}
+              Artist: {artistInfo.name + " " + artistInfo.last_name}
             </Text>
           </View>
         </View>

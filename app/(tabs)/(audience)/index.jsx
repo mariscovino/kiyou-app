@@ -8,10 +8,12 @@ import { router } from 'expo-router';
 import FormField from '@/components/FormField';
 import { useState } from 'react';
 import Header from '../../../components/Header';
+import client from '@/api/client.js';
+import getData from '@/api/getData.js'
 
 const Audience = () => {
     const { user, setConcert } = useGlobalContext();
-    const { data: concerts } = null;
+    const { data: concerts } = getData('/users/getAudienceConcerts', {"email": user.email});
     const [form, setForm] = useState({
       pin: "",
     });
@@ -19,7 +21,7 @@ const Audience = () => {
     const join = async () => {
         if (form.pin != "") {
             try {
-            const concert = null;
+            const concert = client.post('/users/joinConcert', {"pin": form.pin});
             setConcert(concert);
             router.replace("/../(audience)/concert");
             } catch (error) {
@@ -33,7 +35,7 @@ const Audience = () => {
   return (
     <SafeAreaView className='bg-primary h-full'>
       <ScrollView className='my-6 px-4 space-y-6'>
-          <Header username={user.username} />
+          <Header username={user.name} />
 
           <SearchInput />
 
@@ -56,13 +58,13 @@ const Audience = () => {
           />
 
         <FlatList
-          data={concerts}
-          keyExtractor={(item) => item.id}
+          data={[concerts]}
+          keyExtractor={(item) => item.concert_id}
           scrollEnabled={false}
           renderItem={({ item }) => (
             <ConcertCard
-              name={item.name}
-              artist={item.artist}
+              name={item.concert_name}
+              artist={item.artist_email}
             />
           )}
           ListHeaderComponent={() => (

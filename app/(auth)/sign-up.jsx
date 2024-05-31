@@ -2,10 +2,11 @@ import { useState } from "react";
 import { Link, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { View, Text, ScrollView, Dimensions, Alert, Image } from "react-native";
+import { useGlobalContext } from "../../context/GlobalProvider";
 import images from "../../constants/images";
 import CustomButton from "../../components/CustomButton";
 import FormField from "../../components/FormField";
-import { useGlobalContext } from "../../context/GlobalProvider";
+import client from '@/api/client.js'
 
 const SignUp = () => {
   const { setUser, setIsLogged } = useGlobalContext();
@@ -18,14 +19,20 @@ const SignUp = () => {
   });
 
   const submit = async () => {
-    if (form.username === "" || form.email === "" || form.password === "") {
+    if (form.name === "" || form.last_name == "" || form.email === "" || form.password === "") {
       Alert.alert("Error", "Please fill in all fields");
     }
 
     setSubmitting(true);
     try {
-      // const result = await createUser(form.name, form.last_name, form.email, form.password);
-      //setUser(result);
+      await client.post('/users/signUp', form);
+
+      const result = await client.post('/users/getUser', 
+      {
+        "email": form.email
+      });
+      
+      setUser(result);
       setIsLogged(true);
 
       router.replace("/home");

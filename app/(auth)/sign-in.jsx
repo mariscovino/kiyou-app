@@ -7,6 +7,7 @@ import CustomButton from "../../components/CustomButton";
 import FormField from "../../components/FormField";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import client from '@/api/client.js'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const SignIn = () => {
   const { setUser, setIsLogged } = useGlobalContext();
@@ -24,24 +25,26 @@ const SignIn = () => {
     setSubmitting(true);
 
     try {
-      const response = await client.post('/users/signIn', form);
-      console.log(response)
+      await client.post('/users/signIn', form);
 
-      // const result = await client.get('/users/getUser', 
-      // {
-      //   "email": form.email
-      // });
+      const result = await client.post('/users/getUser', { "email": form.email });
       
-      // setUser(result);
-      // setIsLogged(true);
+      try {
+        const storage = await AsyncStorage.setItem('email', form.email);
+        console.log(storage)
+      } catch (error) {
+        console.log(error.message)
+      }
+
+      setUser(result.data);
+      setIsLogged(true);
       
       router.replace("/home");
     } catch (error) {
       Alert.alert("Error", error.response.data);
+    } finally {
+      setSubmitting(false);
     }
-    // } finally {
-    //   setSubmitting(false);
-    // }
   };
 
   return (
