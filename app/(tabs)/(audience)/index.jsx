@@ -22,7 +22,7 @@ const Audience = () => {
         if (form.pin != "") {
             try {
             const concert = client.post('/users/joinConcert', {"pin": form.pin});
-            setConcert(concert);
+            setConcert(concert.data);
             router.replace("/../(audience)/concert");
             } catch (error) {
             Alert.alert("Error", error.message);

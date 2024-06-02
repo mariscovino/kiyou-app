@@ -21,8 +21,8 @@ const Artist = () => {
     const create = async () => {
       if (form.name != "") {
         try {
-          const concert = client.post('/users/createConcert', {"concert_name": form.name, "email": form.email})
-          setConcert(concert);
+          const concert = await client.post('/users/createConcert', {"concert_name": form.name, "email": user.email})
+          setConcert(concert.data);
           router.replace("/../(artist)/concert");
         } catch (error) {
           Alert.alert("Error", error.message);

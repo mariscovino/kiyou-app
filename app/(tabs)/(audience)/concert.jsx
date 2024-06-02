@@ -1,19 +1,23 @@
-import { Text, FlatList, ScrollView } from 'react-native'
+import { Text, FlatList, ScrollView, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import ConcertCard from '@/components/ConcertCard'
 import Header from '../../../components/Header';
 import { useGlobalContext } from "@/context/GlobalProvider";
+import client from '@/api/client.js'
+import FormField from '@/components/FormField'
+import CustomButton from '@/components/CustomButton'
 
 const Concert = () => {
   const { user, concert } = useGlobalContext();
-  const songRequests = concert.songRequests;
-  const songQueue = concert.songQueue;
-  const songsPlayed  = concert.songsPlayed;
+  const pin = concert.pin
+  const songRequests = client.post('/concerts/getSongRequests', {"pin": pin})
+  const songQueue = client.post('/concerts/getSongQueue', {"pin": pin});
+  const songsPlayed  = client.post('/concerts/getSongsPlayed', {"pin": pin});
 
   return (
     <SafeAreaView className='bg-primary h-full'>
       <ScrollView className='my-6 px-4'>
-        <Header username={user.username} />
+        <Header username={user?.name} />
 
         <FlatList
           data={songRequests}
@@ -34,7 +38,7 @@ const Concert = () => {
 
         <FlatList
           data={songQueue}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.date_created}
           scrollEnabled={false}
           renderItem={({ item }) => (
             <ConcertCard
