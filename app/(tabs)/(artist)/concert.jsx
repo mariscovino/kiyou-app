@@ -3,10 +3,8 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import ConcertCard from '@/components/ConcertCard'
 import Header from '../../../components/Header';
 import { useGlobalContext } from "@/context/GlobalProvider";
-import client from '@/api/client.js'
 import { useState } from 'react';
-import FormField from '@/components/FormField'
-import CustomButton from '@/components/CustomButton'
+import getData from '@/api/getData.js'
 
 const Concert = () => {
   const { user, concert } = useGlobalContext();
@@ -15,9 +13,9 @@ const Concert = () => {
     queue_name: "",
   });
   const pin = concert.pin
-  const songRequests = client.post('/concerts/getSongRequests', {"pin": pin})
-  const songQueue = client.post('/concerts/getSongQueue', {"pin": pin});
-  const songsPlayed  = client.post('/concerts/getSongsPlayed', {"pin": pin});
+  const { data: songRequests } = getData('/concerts/getSongRequests', {"pin": pin});
+  const { data: songQueue } = getData('/concerts/getSongQueue', {"pin": pin});
+  const { data: songsPlayed } = getData('/concerts/getSongsPlayed', {"pin": pin});
 
   const addPlayed = async () => {
 
@@ -34,7 +32,7 @@ const Concert = () => {
 
         <FlatList
           data={songRequests}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.request_id}
           scrollEnabled={false}
           renderItem={({ item }) => (
             <ConcertCard
@@ -66,28 +64,9 @@ const Concert = () => {
             )}
         />
 
-        <View className="w-full flex-1">
-          <Text className="text-lg font-semibold text-gray-100 mb-3">
-            Add song
-          </Text>
-        </View>
-  
-        <FormField
-            title="Song name"
-            value={form.queue_name}
-            handleChangeText={(e) => setForm({ ...form, queue_name: e })}
-            otherStyles="mt-3"
-          />
-
-        <CustomButton
-          title="Add"
-          handlePress={addQueue}
-          containerStyles="mt-7"
-        />
-
         <FlatList
           data={songsPlayed}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.played_element_id}
           scrollEnabled={false}
           renderItem={({ item }) => (
             <ConcertCard
@@ -100,25 +79,6 @@ const Concert = () => {
               Songs you already played:
             </Text>
             )}
-        />
-
-        <View className="w-full flex-1">
-          <Text className="text-lg font-semibold text-gray-100 mb-3">
-            Add song
-          </Text>
-        </View>
-  
-        <FormField
-            title="Song name"
-            value={form.played_name}
-            handleChangeText={(e) => setForm({ ...form, played_name: e })}
-            otherStyles="mt-3"
-          />
-
-        <CustomButton
-          title="Add"
-          handlePress={addPlayed}
-          containerStyles="mt-7"
         />
 
       </ScrollView>

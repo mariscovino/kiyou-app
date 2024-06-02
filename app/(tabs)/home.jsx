@@ -7,7 +7,6 @@ import getData from '@/api/getData.js'
 const Home = () => {
   const { user } = useGlobalContext();
   const { data: concerts } =  getData('/users/getAllConcerts', {"email": user.email});
-
   return (
     <Canvas>
       <SearchInput />

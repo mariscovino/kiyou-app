@@ -8,7 +8,7 @@ const ConcertCard = ({ name, artist, handlePress }) => {
 
   return (
     <TouchableOpacity 
-      className="flex flex-col items-center px-4 mb-14"
+      className="flex flex-col items-center mb-14"
       onPress={handlePress}>
       <View className="flex flex-row gap-3 items-start">
         <View className="flex justify-center items-center flex-row flex-1">

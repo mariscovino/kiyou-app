@@ -1,45 +1,41 @@
 import { View, Text, TouchableOpacity, Image } from "react-native";
-
 import { icons } from "../constants";
+import Octicons from '@expo/vector-icons/Octicons';
 
-const ConcertCard = ({ name, handlePress }) => {
+const SongCard = ({ name, artist, handlePress }) => {
 
   return (
-    <TouchableOpacity 
-      className="flex flex-col items-center px-4 mb-14"
+    <View 
+      className="flex flex-col items-center mb-6"
       onPress={handlePress}>
       <View className="flex flex-row gap-3 items-start">
         <View className="flex justify-center items-center flex-row flex-1">
-          <View className="w-[46px] h-[46px] rounded-lg border border-secondary flex justify-center items-center p-0.5">
-            <Image
-              source={icons.concert}
-              className="w-full h-full rounded-lg"
-              resizeMode="cover"
-            />
-          </View>
-
-          <View className="flex justify-center flex-1 ml-3 gap-y-1">
+          <View className="flex justify-center flex-1 gap-y-1">
             <Text
               className="font-semibold text-sm text-white"
               numberOfLines={1}
             >
-              Name: {name}
+              {name}
             </Text>
             <Text
               className="text-xs text-gray-100 font-regular"
               numberOfLines={1}
             >
-              Artist:
+              by {artist}
             </Text>
           </View>
         </View>
 
+        <TouchableOpacity className="pt-2 px-2">
+          <Octicons name="check" size={20} color="white"/>
+        </TouchableOpacity>
+
         <TouchableOpacity className="pt-2">
-          <Image source={icons.menu} className="w-5 h-5" resizeMode="contain" />
+          <Octicons name="trash" size={20} color="white"/>
         </TouchableOpacity>
       </View>
-    </TouchableOpacity>
+    </View>
   );
 };
 
-export default ConcertCard;
+export default SongCard;

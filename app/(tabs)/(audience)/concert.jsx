@@ -3,16 +3,16 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import ConcertCard from '@/components/ConcertCard'
 import Header from '../../../components/Header';
 import { useGlobalContext } from "@/context/GlobalProvider";
-import client from '@/api/client.js'
-import FormField from '@/components/FormField'
-import CustomButton from '@/components/CustomButton'
+import getData from '@/api/getData.js'
+import SongCard from '@/components/SongCard'
+
 
 const Concert = () => {
   const { user, concert } = useGlobalContext();
   const pin = concert.pin
-  const songRequests = client.post('/concerts/getSongRequests', {"pin": pin})
-  const songQueue = client.post('/concerts/getSongQueue', {"pin": pin});
-  const songsPlayed  = client.post('/concerts/getSongsPlayed', {"pin": pin});
+  const { data: songRequests } = getData('/concerts/getSongRequests', {"pin": pin});
+  const { data: songQueue } = getData('/concerts/getSongQueue', {"pin": pin});
+  const { data: songsPlayed } = getData('/concerts/getSongsPlayed', {"pin": pin});
 
   return (
     <SafeAreaView className='bg-primary h-full'>
@@ -24,9 +24,9 @@ const Concert = () => {
           keyExtractor={(item) => item.id}
           scrollEnabled={false}
           renderItem={({ item }) => (
-            <ConcertCard
-              name={item.name}
-              artist={item.artist}
+            <SongCard
+              name={item.song_name}
+              artist={item.song_artist}
             />
           )}
           ListHeaderComponent={() => (
@@ -41,9 +41,9 @@ const Concert = () => {
           keyExtractor={(item) => item.date_created}
           scrollEnabled={false}
           renderItem={({ item }) => (
-            <ConcertCard
-              name={item.name}
-              artist={item.artist}
+            <SongCard
+              name={item.song_name}
+              artist={item.song_artist}
             />
           )}
           ListHeaderComponent={() => (
@@ -58,9 +58,9 @@ const Concert = () => {
           keyExtractor={(item) => item.id}
           scrollEnabled={false}
           renderItem={({ item }) => (
-            <ConcertCard
-              name={item.name}
-              artist={item.artist}
+            <SongCard
+              name={item.song_name}
+              artist={item.song_artist}
             />
           )}
           ListHeaderComponent={() => (
