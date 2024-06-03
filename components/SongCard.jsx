@@ -1,13 +1,9 @@
-import { View, Text, TouchableOpacity, Image } from "react-native";
-import { icons } from "../constants";
-import Octicons from '@expo/vector-icons/Octicons';
+import { View, Text } from "react-native";
 
-const SongCard = ({ name, artist, handlePress }) => {
+const SongCard = ({ name, artist, children }) => {
 
   return (
-    <View 
-      className="flex flex-col items-center mb-6"
-      onPress={handlePress}>
+    <View className="flex flex-col items-center mb-6">
       <View className="flex flex-row gap-3 items-start">
         <View className="flex justify-center items-center flex-row flex-1">
           <View className="flex justify-center flex-1 gap-y-1">
@@ -26,13 +22,8 @@ const SongCard = ({ name, artist, handlePress }) => {
           </View>
         </View>
 
-        <TouchableOpacity className="pt-2 px-2">
-          <Octicons name="check" size={20} color="white"/>
-        </TouchableOpacity>
+        { children }
 
-        <TouchableOpacity className="pt-2">
-          <Octicons name="trash" size={20} color="white"/>
-        </TouchableOpacity>
       </View>
     </View>
   );

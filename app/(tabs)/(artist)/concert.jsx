@@ -1,9 +1,8 @@
-import { Text, FlatList, ScrollView, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import ConcertCard from '@/components/ConcertCard'
-import Header from '../../../components/Header';
-import { useGlobalContext } from "@/context/GlobalProvider";
-import { useState } from 'react';
+import { useGlobalContext } from "@/context/GlobalProvider"
+import { useState } from 'react'
+import Canvas from '@/components/Canvas'
+import List from '@/components/List';
+import CustomIcon from '@/components/CustomIcon';
 import getData from '@/api/getData.js'
 
 const Concert = () => {
@@ -17,7 +16,11 @@ const Concert = () => {
   const { data: songQueue } = getData('/concerts/getSongQueue', {"pin": pin});
   const { data: songsPlayed } = getData('/concerts/getSongsPlayed', {"pin": pin});
 
-  const addPlayed = async () => {
+  const acceptRequest = async () => {
+
+  }
+
+  const denyRequest = async () => {
 
   }
 
@@ -25,64 +28,57 @@ const Concert = () => {
     
   }
 
+  const removeQueue = async () => {
+
+  }
+
   return (
-    <SafeAreaView className='bg-primary h-full'>
-      <ScrollView className='my-6 px-4'>
-        <Header username={user?.name} />
+    <Canvas>
 
-        <FlatList
-          data={songRequests}
-          keyExtractor={(item) => item.request_id}
-          scrollEnabled={false}
-          renderItem={({ item }) => (
-            <ConcertCard
-              name={item.name}
-              artist={item.artist}
-            />
-          )}
-          ListHeaderComponent={() => (
-            <Text className="text-lg font-semibold text-gray-100 my-6">
-              Songs requested by audience:
-            </Text>
-            )}
+      <List
+      data={songRequests}
+      order_by="request_id"
+      header_text="Songs requested by audience"
+      >
+        <CustomIcon
+          name="check"
+          styles="mr-4"
+          handlePress={acceptRequest}
         />
 
-        <FlatList
-          data={songQueue}
-          keyExtractor={(item) => item.date_created}
-          scrollEnabled={false}
-          renderItem={({ item }) => (
-            <ConcertCard
-              name={item.name}
-              artist={item.artist}
-            />
-          )}
-          ListHeaderComponent={() => (
-            <Text className="text-lg font-semibold text-gray-100 my-6">
-              Songs you will play:
-            </Text>
-            )}
+        <CustomIcon
+          name="x"
+          styles="mr-4"
+          handlePress={denyRequest}
+        />
+      </List>
+
+      <List
+      data={songQueue}
+      order_by="date_created"
+      header_text="Songs you will play"
+      add={true}
+      >
+        <CustomIcon
+          name="check"
+          styles="mr-4"
+          handlePress={addQueue}
         />
 
-        <FlatList
-          data={songsPlayed}
-          keyExtractor={(item) => item.played_element_id}
-          scrollEnabled={false}
-          renderItem={({ item }) => (
-            <ConcertCard
-              name={item.name}
-              artist={item.artist}
-            />
-          )}
-          ListHeaderComponent={() => (
-            <Text className="text-lg font-semibold text-gray-100 my-6">
-              Songs you already played:
-            </Text>
-            )}
+        <CustomIcon
+          name="trash"
+          styles="mr-4"
+          handlePress={removeQueue}
         />
+      </List>
 
-      </ScrollView>
-    </SafeAreaView>
+      <List
+      data={songsPlayed}
+      order_by="played_element_id"
+      header_text="Songs you already played"
+      />
+
+    </Canvas>
   )
 }
 

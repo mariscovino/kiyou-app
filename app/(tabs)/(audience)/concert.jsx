@@ -1,10 +1,9 @@
-import { Text, FlatList, ScrollView, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import ConcertCard from '@/components/ConcertCard'
-import Header from '../../../components/Header';
-import { useGlobalContext } from "@/context/GlobalProvider";
+import { useGlobalContext } from "@/context/GlobalProvider"
+import { useState } from 'react'
+import Canvas from '@/components/Canvas'
+import List from '@/components/List';
+import CustomIcon from '@/components/CustomIcon';
 import getData from '@/api/getData.js'
-import SongCard from '@/components/SongCard'
 
 
 const Concert = () => {
@@ -15,62 +14,32 @@ const Concert = () => {
   const { data: songsPlayed } = getData('/concerts/getSongsPlayed', {"pin": pin});
 
   return (
-    <SafeAreaView className='bg-primary h-full'>
-      <ScrollView className='my-6 px-4'>
-        <Header username={user?.name} />
+    <Canvas>
 
-        <FlatList
-          data={songRequests}
-          keyExtractor={(item) => item.id}
-          scrollEnabled={false}
-          renderItem={({ item }) => (
-            <SongCard
-              name={item.song_name}
-              artist={item.song_artist}
-            />
-          )}
-          ListHeaderComponent={() => (
-            <Text className="text-lg font-semibold text-gray-100 my-6">
-              Songs requested by audience:
-            </Text>
-            )}
-        />
+      <List
+        data={songRequests}
+        order_by="request_id"
+        header_text="Songs requested by audience"
+        add={true}
+        url="/concerts/createSongRequests"
+        email={true}
+      >
 
-        <FlatList
-          data={songQueue}
-          keyExtractor={(item) => item.date_created}
-          scrollEnabled={false}
-          renderItem={({ item }) => (
-            <SongCard
-              name={item.song_name}
-              artist={item.song_artist}
-            />
-          )}
-          ListHeaderComponent={() => (
-            <Text className="text-lg font-semibold text-gray-100 my-6">
-              Songs artist will play:
-            </Text>
-            )}
-        />
+      </List>
 
-        <FlatList
-          data={songsPlayed}
-          keyExtractor={(item) => item.id}
-          scrollEnabled={false}
-          renderItem={({ item }) => (
-            <SongCard
-              name={item.song_name}
-              artist={item.song_artist}
-            />
-          )}
-          ListHeaderComponent={() => (
-            <Text className="text-lg font-semibold text-gray-100 my-6">
-              Songs artist already played:
-            </Text>
-            )}
-        />
-      </ScrollView>
-    </SafeAreaView>
+      <List
+        data={songQueue}
+        order_by="date_created"
+        header_text="Songs artist will play"
+      />
+
+      <List
+        data={songsPlayed}
+        order_by="played_element_id"
+        header_text="Songs artist already played"
+      />
+
+    </Canvas>
   )
 }
 
