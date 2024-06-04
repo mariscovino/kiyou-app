@@ -2,9 +2,8 @@ import { FlatList, Text, View } from 'react-native'
 import SongCard from './SongCard';
 import CustomIcon from './CustomIcon';
 import SongSheet from './SongSheet';
-import client from '../api/client';
 
-const List = ({ data, order_by, header_text, add, url, email, children }) => {
+const ListComponent = ({ data, order_by, header_text, add, url, email, children }) => {
   const addList = async () => {
     <SongSheet
       url={url}
@@ -19,13 +18,36 @@ const List = ({ data, order_by, header_text, add, url, email, children }) => {
             keyExtractor={(item) => item[order_by]}
             scrollEnabled={false}
             renderItem={({ item }) => (
+
                 <SongCard
-                name={item.song_name}
-                artist={item.song_artist}
+                  name={item.song_name}
+                  artist={item.song_artist}
                 >
                 { children }
 
+                {item.status == 'accepted' &&
+                  <CustomIcon
+                    name="check-circle"
+                    styles="mr-4"
+                  />
+                }
+
+                {item.status == 'denied' &&
+                  <CustomIcon
+                    name="x-circle"
+                    styles="mr-4"
+                  />
+                }
+
+                {item.status == 'pending' &&
+                  <CustomIcon
+                    name="clock"
+                    styles="mr-4"
+                  />
+                }
+
                 </SongCard>
+                
             )}
             ListHeaderComponent={() => (
                 <View className='flex items-center flex-row flex-1'>
@@ -47,4 +69,4 @@ const List = ({ data, order_by, header_text, add, url, email, children }) => {
   )
 }
 
-export default List
+export default ListComponent

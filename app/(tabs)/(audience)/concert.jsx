@@ -1,7 +1,7 @@
 import { useGlobalContext } from "@/context/GlobalProvider"
 import { useState } from 'react'
 import Canvas from '@/components/Canvas'
-import List from '@/components/List';
+import ListComponent from '@/components/ListComponent';
 import CustomIcon from '@/components/CustomIcon';
 import getData from '@/api/getData.js'
 
@@ -16,7 +16,7 @@ const Concert = () => {
   return (
     <Canvas>
 
-      <List
+      <ListComponent
         data={songRequests}
         order_by="request_id"
         header_text="Songs requested by audience"
@@ -25,15 +25,15 @@ const Concert = () => {
         email={true}
       >
 
-      </List>
+      </ListComponent>
 
-      <List
+      <ListComponent
         data={songQueue}
         order_by="date_created"
         header_text="Songs artist will play"
       />
 
-      <List
+      <ListComponent
         data={songsPlayed}
         order_by="played_element_id"
         header_text="Songs artist already played"

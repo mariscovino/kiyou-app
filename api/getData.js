@@ -10,6 +10,7 @@ const getData = (url, body) => {
     setLoading(true);
     try {
       const res = await client.post(url, body)
+
       setData(res.data);
     } catch (error) {
       Alert.alert("Error", error.message);
