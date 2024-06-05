@@ -1,13 +1,15 @@
 import client from "./client";
+import getData from '@/api/getData.js'
 import { useGlobalContext } from "@/context/GlobalProvider";
 
 export default class User {
-  name;
-  last_name;
-  email;
-  password;
+  static #instance: User;
+  private name: string;
+  private last_name: string;
+  private email: string;
+  private password: string;
 
-  constructor() {
+  private constructor() {
     const {user} = useGlobalContext();
     this.name = user.name;
     this.last_name = user.last_name;
@@ -15,14 +17,21 @@ export default class User {
     this.password = user.password;
   }
 
-  async signIn() {
+  public static getInstance() {
+    if (!User.#instance) {
+      User.#instance = new User();
+    }
+    return User.#instance;
+  }
+
+  public async signIn() {
     return await client.post("/users/signIn", {
       "email": this.email,
       "password": this.password
     });
   }
-
-  async signUp() {
+  
+  public async signUp() {
     return await client.post("/users/signUp", {
       "name": this.name,
       "last_name": this.last_name,
@@ -31,35 +40,35 @@ export default class User {
     });
   }
 
-  async signOut() {
+  public async signOut() {
     return await client.post("/users/signOut", { "email": this.email });
   }
 
-  async getArtistConcerts() {
-    return getData('/users/getArtistConcerts', {"email": this.email});
+  public getArtistConcerts() {
+    return getData('/users/getArtistConcerts', {"email": this.email}).data;
   }
 
-  async getAudienceConcerts() {
-    return getData('/users/getAudienceConcerts', {"email": this.email});
+  public getAudienceConcerts() {
+    return getData('/users/getAudienceConcerts', {"email": this.email}).data;
   }
 
-  async getAllConcerts() {
-    return getData('/users/getAllConcerts', {"email": this.email});
+  public getAllConcerts() {
+    return getData('/users/getAllConcerts', {"email": this.email}).data;
   }
 
-  async joinConcert(pin) {
+  public async joinConcert(pin: number) {
     return await client.post("/users/joinConcert", { "email": this.email, "pin": pin });
   }
 
-  async createConcert(concert_name) {
+  public async createConcert(concert_name: string) {
     return await client.post("/users/createConcert", { "concert_name": concert_name, "email": this.email });
   }
 
-  async getUser() {
+  public async getUser() {
     return await client.post("/users/getUser", { "email": this.email });
   }
 
-  async getUserSessions() {
+  public async getUserSessions() {
     return await client.post("/users/getUserSessions", { "email": this.email });
   }
 }

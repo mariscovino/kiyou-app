@@ -1,46 +1,43 @@
-import { useGlobalContext } from "@/context/GlobalProvider"
-import { useState } from 'react'
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { useState, useMemo } from 'react'
 import Canvas from '@/components/Canvas'
 import ListComponent from '@/components/ListComponent';
-import CustomIcon from '@/components/CustomIcon';
-import getData from '@/api/getData.js'
+import Concert from '@/api/Concert'
+import BottomSheet from '@gorhom/bottom-sheet';
 
 
-const Concert = () => {
-  const { user, concert } = useGlobalContext();
-  const pin = concert.pin
-  const { data: songRequests } = getData('/concerts/getSongRequests', {"pin": pin});
-  const { data: songQueue } = getData('/concerts/getSongQueue', {"pin": pin});
-  const { data: songsPlayed } = getData('/concerts/getSongsPlayed', {"pin": pin});
+const AudienceConcert = () => {
+  const concert = new Concert();
+  const snapPoints = useMemo(() => ['25%', '50%', '70%'], []);
 
   return (
-    <Canvas>
+    <GestureHandlerRootView>
+      <Canvas>
 
-      <ListComponent
-        data={songRequests}
-        order_by="request_id"
-        header_text="Songs requested by audience"
-        add={true}
-        url="/concerts/createSongRequests"
-        email={true}
-      >
+        <ListComponent
+          data={concert.getSongRequests()}
+          order_by="request_id"
+          header_text="Songs requested by audience"
+          add={true}
+        >
 
-      </ListComponent>
+        </ListComponent>
 
-      <ListComponent
-        data={songQueue}
-        order_by="date_created"
-        header_text="Songs artist will play"
-      />
+        <ListComponent
+          data={concert.getSongQueue()}
+          order_by="date_created"
+          header_text="Songs artist will play"
+        />
 
-      <ListComponent
-        data={songsPlayed}
-        order_by="played_element_id"
-        header_text="Songs artist already played"
-      />
+        <ListComponent
+          data={concert.getSongsPlayed()}
+          order_by="played_element_id"
+          header_text="Songs artist already played"
+        />
 
-    </Canvas>
+      </Canvas>
+    </GestureHandlerRootView>
   )
 }
 
-export default Concert
+export default AudienceConcert
