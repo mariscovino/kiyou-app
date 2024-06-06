@@ -15,7 +15,7 @@ export default class User {
 
   private constructor() {
     const { user } = useGlobalContext();
-
+    
     this.name = user.name;
     this.last_name = user.last_name;
     this.email = user.email;
@@ -23,10 +23,14 @@ export default class User {
   }
 
   public static getInstance() {
+    const newUser = new User();
+
     if (!User.#instance) {
-      User.#instance = new User();
+      User.#instance = newUser;
     }
+
     return User.#instance;
+    
   }
 
   public async signIn(email: string, password: string) {

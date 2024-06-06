@@ -11,7 +11,6 @@ import ConcertList from '@/components/ConcertList'
 import User from "@/api/User"
 
 const Audience = () => {
-    const user = User.getInstance();
     const { setConcert } = useGlobalContext();
     const [form, setForm] = useState({
       pin: "",
@@ -20,7 +19,7 @@ const Audience = () => {
     const join = async () => {
         if (form.pin != "") {
             try {
-            const concert = await user.joinConcert(form.pin);
+            const concert = await User.joinConcert(form.pin);
             setConcert(concert.data);
             router.replace("/../(audience)/concert");
             } catch (error) {
@@ -52,7 +51,7 @@ const Audience = () => {
           />
 
           <ConcertList
-            data={user.getAudienceConcerts()}
+            data={User.getInstance().getAudienceConcerts()}
           />
 
     </Canvas>
