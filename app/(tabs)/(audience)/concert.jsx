@@ -1,14 +1,13 @@
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { useState, useMemo } from 'react'
+import { useRef } from 'react'
 import Canvas from '@/components/Canvas'
 import ListComponent from '@/components/ListComponent';
 import Concert from '@/api/Concert'
-import BottomSheet from '@gorhom/bottom-sheet';
-
+import SongSheet from '@/components/SongSheet'
 
 const AudienceConcert = () => {
   const concert = new Concert();
-  const snapPoints = useMemo(() => ['25%', '50%', '70%'], []);
+  const bottomSheetRef = useRef(null);
 
   return (
     <GestureHandlerRootView>
@@ -19,6 +18,7 @@ const AudienceConcert = () => {
           order_by="request_id"
           header_text="Songs requested by audience"
           add={true}
+          bottomSheetRef={bottomSheetRef}
         >
 
         </ListComponent>
@@ -36,6 +36,11 @@ const AudienceConcert = () => {
         />
 
       </Canvas>
+
+      <SongSheet
+        bottomSheetRef={bottomSheetRef}
+        submitType="requests"
+      />
     </GestureHandlerRootView>
   )
 }

@@ -1,19 +1,18 @@
 import { Text, View, FlatList, ScrollView, Alert } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import SearchInput from "@/components/SearchInput";
-import ConcertCard from '@/components/ConcertCard'
 import CustomButton from '@/components/CustomButton';
 import { useGlobalContext } from "@/context/GlobalProvider";
 import { router } from 'expo-router';
 import FormField from '@/components/FormField';
 import { useState } from 'react';
-import Header from '../../../components/Header';
-import client from '@/api/client.js';
-import getData from '@/api/getData.js'
+import Canvas from '@/components/Canvas'
+import ConcertList from '@/components/ConcertList'
+import User from "@/api/User"
 
 const Audience = () => {
-    const { user, setConcert } = useGlobalContext();
-    const { data: concerts } = getData('/users/getAudienceConcerts', {"email": user.email});
+    const user = User.getInstance();
+    const { setConcert } = useGlobalContext();
     const [form, setForm] = useState({
       pin: "",
     });
@@ -21,7 +20,7 @@ const Audience = () => {
     const join = async () => {
         if (form.pin != "") {
             try {
-            const concert = client.post('/users/joinConcert', {"pin": form.pin});
+            const concert = await user.joinConcert(form.pin);
             setConcert(concert.data);
             router.replace("/../(audience)/concert");
             } catch (error) {
@@ -33,14 +32,9 @@ const Audience = () => {
     };
 
   return (
-    <SafeAreaView className='bg-primary h-full'>
-      <ScrollView className='my-6 px-4 space-y-6'>
-          <Header username={user.name} />
-
+    <Canvas>
           <SearchInput />
-
-          <View className="w-full flex justify-centerpx-4">
-            <Text className="text-lg font-semibold text-gray-100 mb-3">
+            <Text className="text-lg font-semibold text-gray-100 mb-3 mt-7">
               Join existing concert
             </Text>
 
@@ -57,25 +51,11 @@ const Audience = () => {
             containerStyles="mt-7"
           />
 
-        <FlatList
-          data={[concerts]}
-          keyExtractor={(item) => item.concert_id}
-          scrollEnabled={false}
-          renderItem={({ item }) => (
-            <ConcertCard
-              name={item.concert_name}
-              artist={item.artist_email}
-            />
-          )}
-          ListHeaderComponent={() => (
-            <Text className="text-lg font-semibold text-gray-100 my-6">
-              Your audience concerts:
-            </Text>
-            )}
+          <ConcertList
+            data={user.getAudienceConcerts()}
           />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+
+    </Canvas>
   )
 }
 

@@ -5,7 +5,6 @@ import Canvas from '@/components/Canvas'
 import ListComponent from '@/components/ListComponent';
 import CustomIcon from '@/components/CustomIcon';
 import Concert from '@/api/Concert'
-import BottomSheet, { BottomSheetBackdrop, BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import SongSheet from '@/components/SongSheet';
 
 const ArtistConcert = () => {
@@ -77,7 +76,10 @@ const ArtistConcert = () => {
         />
 
       </Canvas>
-      <SongSheet bottomSheetRef={bottomSheetRef} />
+      <SongSheet
+        bottomSheetRef={bottomSheetRef}
+        submitType="queue"
+      />
     </GestureHandlerRootView>
   )
 }

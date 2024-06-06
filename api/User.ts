@@ -1,6 +1,10 @@
+import { useState } from "react";
+import { Alert } from "react-native";
+import { useGlobalContext } from "@/context/GlobalProvider";
+import { router } from "expo-router";
 import client from "./client";
 import getData from '@/api/getData.js'
-import { useGlobalContext } from "@/context/GlobalProvider";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default class User {
   static #instance: User;
@@ -10,7 +14,8 @@ export default class User {
   private password: string;
 
   private constructor() {
-    const {user} = useGlobalContext();
+    const { user } = useGlobalContext();
+
     this.name = user.name;
     this.last_name = user.last_name;
     this.email = user.email;
@@ -24,20 +29,36 @@ export default class User {
     return User.#instance;
   }
 
-  public async signIn() {
-    return await client.post("/users/signIn", {
-      "email": this.email,
-      "password": this.password
+  public async signIn(email: string, password: string) {
+    this.email = email;
+    this.password = password;
+
+    await client.post("/users/signIn", {
+      "email": email,
+      "password": password
     });
+
+    await AsyncStorage.setItem('email', email);
+
+    return await client.post('/users/getUser', { "email": email });
   }
   
-  public async signUp() {
-    return await client.post("/users/signUp", {
-      "name": this.name,
-      "last_name": this.last_name,
-      "email": this.email,
-      "password": this.password
+  public async signUp(name: string, last_name: string, email: string, password: string) {
+    this.name = name;
+    this.last_name = last_name;
+    this.email = email;
+    this.password = password;
+    
+    await client.post("/users/signUp", {
+      "name": name,
+      "last_name": last_name,
+      "email": email,
+      "password": password
     });
+    
+    await AsyncStorage.setItem('email', email);
+
+    return await client.post('/users/getUser', { "email": email });
   }
 
   public async signOut() {

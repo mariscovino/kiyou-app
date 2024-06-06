@@ -6,13 +6,17 @@ import InfoBox from "../../components/InfoBox";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import client from '@/api/client.js';
 import getData from '@/api/getData.js'
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import User from "@/api/User";
 
 const Profile = () => {
   const { user, setUser, setIsLogged } = useGlobalContext();
-  const { data: concerts } = getData('/users/getAllConcerts', {"email": user.email});
   
   const logout = async () => {
-    client.post('/users/signOut', {"email": user.email})
+    await AsyncStorage.removeItem('email');
+
+    await User.getInstance().signOut();
+
     setUser(null);
     setIsLogged(false);
 
@@ -48,7 +52,7 @@ const Profile = () => {
             />
 
             <InfoBox
-              title={concerts.length || 0}
+              title={User.getInstance().getAllConcerts().length || 0}
               subtitle="Concerts"
               titleStyles="text-xl"
             />

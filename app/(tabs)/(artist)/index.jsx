@@ -3,17 +3,19 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import SearchInput from "@/components/SearchInput"
 import ConcertCard from '@/components/ConcertCard'
 import CustomButton from '@/components/CustomButton'
-import Header from '../../../components/Header'
 import { useGlobalContext } from "@/context/GlobalProvider"
 import { router } from 'expo-router'
 import FormField from '@/components/FormField'
 import { useState } from 'react'
 import client from '@/api/client.js'
 import getData from '@/api/getData.js'
+import Canvas from '@/components/Canvas'
+import ConcertList from '@/components/ConcertList'
+import User from "@/api/User"
 
 const Artist = () => {
-    const { user, setConcert } = useGlobalContext();
-    const { data: concerts } = getData('/users/getArtistConcerts', {"email": user.email});
+    const user = User.getInstance();
+    const { setConcert } = useGlobalContext();
     const [form, setForm] = useState({
       name: "",
     });
@@ -21,7 +23,7 @@ const Artist = () => {
     const create = async () => {
       if (form.name != "") {
         try {
-          const concert = await client.post('/users/createConcert', {"concert_name": form.name, "email": user.email})
+          const concert = await user.createConcert(form.name);
           setConcert(concert.data);
           router.replace("/../(artist)/concert");
         } catch (error) {
@@ -33,52 +35,31 @@ const Artist = () => {
     };
   
     return (
-      <SafeAreaView className='bg-primary h-full'>
-        <ScrollView className='my-6 px-4 space-y-6'>
-            <Header username={user.name} />
-  
-            <SearchInput />
-  
-            <View className="w-full flex justify-centerpx-4">
-  
-              <View className="w-full flex-1">
-                <Text className="text-lg font-semibold text-gray-100 mb-3">
-                  Create new concert 
-                </Text>
-              </View>
-  
-              <FormField
-                  title="Concert name"
-                  value={form.name}
-                  handleChangeText={(e) => setForm({ ...form, name: e })}
-                  otherStyles="mt-3"
-                />
-  
-              <CustomButton
-                title="Create"
-                handlePress={create}
-                containerStyles="mt-7"
-              />
-  
-          <FlatList
-            data={[concerts]}
-            keyExtractor={(item) => item.concert_id}
-            scrollEnabled={false}
-            renderItem={({ item }) => (
-              <ConcertCard
-                name={item.concert_name}
-                artist={item.artist_email}
-              />
-            )}
-            ListHeaderComponent={() => (
-              <Text className="text-lg font-semibold text-gray-100 my-6">
-                All concerts:
-              </Text>
-              )}
-            />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
+      <Canvas>
+        <SearchInput />
+        <View className="w-full flex-1">
+          <Text className="text-lg font-semibold text-gray-100 mb-3 mt-7">
+            Create new concert 
+          </Text>
+        </View>
+
+        <FormField
+            title="Concert name"
+            value={form.name}
+            handleChangeText={(e) => setForm({ ...form, name: e })}
+            otherStyles="mt-3"
+          />
+
+        <CustomButton
+          title="Create"
+          handlePress={create}
+          containerStyles="mt-7"
+        />
+
+        <ConcertList
+          data={user.getArtistConcerts()}
+        />
+      </Canvas>
     )
 }
 

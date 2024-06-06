@@ -6,6 +6,7 @@ import getData from '@/api/getData.js'
 import User from "@/api/User";
 
 const Home = () => {
+
   return (
     <Canvas>
       <SearchInput />
