@@ -1,9 +1,11 @@
 import { FlatList, Text, View } from 'react-native'
+import { useGlobalContext } from '@/context/GlobalProvider';
 import SongCard from './SongCard';
 import CustomIcon from './CustomIcon';
 
 const ListComponent = ({ data, order_by, header_text, add, bottomSheetRef, children }) => {
   const handleOpenPress = () => bottomSheetRef.current?.expand();
+  const { refresh } = useGlobalContext();
 
   return (
       <View>
@@ -11,6 +13,7 @@ const ListComponent = ({ data, order_by, header_text, add, bottomSheetRef, child
               data={data}
               keyExtractor={(item) => item[order_by]}
               scrollEnabled={false}
+              extraData={refresh}
               renderItem={({ item }) => (
 
                   <SongCard

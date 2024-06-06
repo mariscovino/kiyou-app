@@ -26,14 +26,14 @@ const SignIn = () => {
     setSubmitting(true);
 
     try {
-      const result = await User.getInstance().signIn(form.email, form.password);
-      // await client.post('/users/signIn', form);
-      // const result = await client.post('/users/getUser', { "email": form.email });
+      // const result = await user.signIn(form.email, form.password);
+      await client.post('/users/signIn', form);
+      const result = await client.post('/users/getUser', { "email": form.email });
 
       setUser(result.data);
       setIsLogged(true);
       
-      router.replace("/home");
+      router.push("/home");
     } catch (error) {
       Alert.alert("Error", error.message);
     } finally {

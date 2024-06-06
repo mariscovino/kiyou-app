@@ -1,6 +1,6 @@
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { View, Image, TouchableOpacity } from "react-native";
+import { View, Image, TouchableOpacity, Alert } from "react-native";
 import { icons } from "../../constants";
 import InfoBox from "../../components/InfoBox";
 import { useGlobalContext } from "../../context/GlobalProvider";
@@ -10,17 +10,22 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import User from "@/api/User";
 
 const Profile = () => {
-  const { user, setUser, setIsLogged } = useGlobalContext();
+  const { setUser, setIsLogged } = useGlobalContext();
+  const user = User.getInstance();
   
   const logout = async () => {
-    await AsyncStorage.removeItem('email');
-
-    await User.getInstance().signOut();
-
-    setUser(null);
-    setIsLogged(false);
-
-    router.replace("/sign-in");
+    try {
+      await AsyncStorage.removeItem('email');
+  
+      await user.signOut();
+  
+      setUser(null);
+      setIsLogged(false);
+  
+      router.push("/sign-in");
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    }
   };
 
   return (
@@ -46,13 +51,13 @@ const Profile = () => {
             </View>
 
             <InfoBox
-              title={user?.name}
+              title={user.getName()}
               containerStyles="mt-5"
               titleStyles="text-lg"
             />
 
             <InfoBox
-              title={User.getInstance().getAllConcerts().length || 0}
+              title={user.getAllConcerts().length || 0}
               subtitle="Concerts"
               titleStyles="text-xl"
             />

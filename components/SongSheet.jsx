@@ -1,6 +1,7 @@
 import { View, StyleSheet, Alert, ScrollView, KeyboardAvoidingView, Platform } from 'react-native'
 import { useMemo, useState } from 'react'
-import BottomSheet, { BottomSheetTextInput } from '@gorhom/bottom-sheet';
+import { useGlobalContext } from '@/context/GlobalProvider';
+import BottomSheet from '@gorhom/bottom-sheet';
 import CustomButton from '@/components/CustomButton';
 import FormField from '@/components/FormField';
 import { Octicons } from '@expo/vector-icons';
@@ -10,6 +11,8 @@ import Concert from '@/api/Concert';
 
 const SongSheet = ({ bottomSheetRef, submitType }) => {
     const concert = new Concert();
+    const { refresh, setRefresh } = useGlobalContext();
+
     const snapPoints = useMemo(() => ['40%', '50%', '70%'], []);
     const handleClosePress = () => bottomSheetRef.current?.close();
     const [form, setForm] = useState({

@@ -16,10 +16,10 @@ export default class User {
   private constructor() {
     const { user } = useGlobalContext();
     
-    this.name = user.name;
-    this.last_name = user.last_name;
-    this.email = user.email;
-    this.password = user.password;
+    this.name = user?.name;
+    this.last_name = user?.last_name;
+    this.email = user?.email;
+    this.password = user?.password;
   }
 
   public static getInstance() {
@@ -31,6 +31,10 @@ export default class User {
 
     return User.#instance;
     
+  }
+
+  public getName() {
+    return this.name;
   }
 
   public async signIn(email: string, password: string) {
