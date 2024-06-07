@@ -16,12 +16,12 @@ const ConcertList = (data) => {
             name={item.concert_name}
             artist={item.artist_email}
             handlePress={() => {
-            setConcert(item);
-            if (item.artist_email == user.email) {
-                router.replace("/../(artist)/concert");
-            } else {
-                router.replace("/../(audience)/concert");
-            }
+                setConcert(item);
+                if (item.artist_email == user.email) {
+                    router.replace("/../(artist)/concert");
+                } else {
+                    router.replace("/../(audience)/concert");
+                }
             }}
         />
         )}

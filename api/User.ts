@@ -37,6 +37,10 @@ export default class User {
     return this.name;
   }
 
+  public getEmail() {
+    return this.email;
+  }
+
   public async signIn(email: string, password: string) {
     this.email = email;
     this.password = password;

@@ -9,6 +9,7 @@ import { useGlobalContext } from "../../context/GlobalProvider";
 import User from "@/api/User";
 import client from "@/api/client";
 import { KeyboardAvoidingView } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SignIn = () => {
   const { setUser, setIsLogged } = useGlobalContext();
@@ -26,9 +27,10 @@ const SignIn = () => {
     setSubmitting(true);
 
     try {
-      // const result = await user.signIn(form.email, form.password);
+      // const result = await User.getInstance().signIn(form.email, form.password);
       await client.post('/users/signIn', form);
       const result = await client.post('/users/getUser', { "email": form.email });
+      AsyncStorage.setItem('email', form.email);
 
       setUser(result.data);
       setIsLogged(true);

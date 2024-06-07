@@ -8,8 +8,8 @@ export default class Concert {
 
   public constructor() {
     const { concert, user } = useGlobalContext();
-    this.pin = concert.pin;
-    this.email = user.email;
+    this.pin = concert?.pin;
+    this.email = user?.email;
   }
 
   public getSongRequests() {
@@ -22,6 +22,10 @@ export default class Concert {
 
   public getSongsPlayed() {
     return getData("/concerts/getSongsPlayed", { "pin": this.pin }).data;
+  }
+
+  public async getSongQueueAsync() {
+    return await client.post("/concerts/getSongQueue", { "pin": this.pin });
   }
 
   public async createSongRequests(song_name: string, song_artist: string) {

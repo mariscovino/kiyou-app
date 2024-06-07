@@ -1,11 +1,13 @@
-import { FlatList, Text, View } from 'react-native'
+import { FlatList, Text, View, Alert } from 'react-native'
 import { useGlobalContext } from '@/context/GlobalProvider';
 import SongCard from './SongCard';
 import CustomIcon from './CustomIcon';
+import Concert from '@/api/Concert';
 
-const ListComponent = ({ data, order_by, header_text, add, bottomSheetRef, children }) => {
+const ListComponent = ({ data, order_by, header_text, listType, add, bottomSheetRef, children }) => {
   const handleOpenPress = () => bottomSheetRef.current?.expand();
   const { refresh } = useGlobalContext();
+  const concert = new Concert();
 
   return (
       <View>
@@ -21,6 +23,67 @@ const ListComponent = ({ data, order_by, header_text, add, bottomSheetRef, child
                     artist={item.song_artist}
                   >
                   { children }
+
+                  {listType == 'requests' && (
+                    <CustomIcon
+                    name="check"
+                    styles="mr-4"
+                    handlePress={async () => {
+                      try {
+                        await concert.acceptSong(item.song_name, item.song_artist);
+                        Alert.alert("Success", "Song request accepted");
+                      } catch (error) {
+                        Alert.alert("Error", error.message);
+                      }
+                    }}
+                    />
+                  )}
+
+                  {listType == 'requests' && (
+                    <CustomIcon
+                      name="x"
+                      styles="mr-4"
+                      handlePress={async () => {
+                        try {
+                          await concert.denySong(item.song_name, item.song_artist);
+                          Alert.alert("Success", "Song request denied");
+                        } catch (error) {
+                          Alert.alert("Error", error.message);
+                        }
+                      }}
+                    />
+                  )}
+
+                  {listType == 'queue' && (
+                      <CustomIcon
+                      name="check"
+                      styles="mr-4"
+                      handlePress={async () => {
+                        try {
+                          await concert.createSongsPlayed(item.song_name, item.song_artist);
+                          await concert.removeSongQueue(item.song_name, item.song_artist);
+                          Alert.alert("Success", "Song added to songs played list");
+                        } catch (error) {
+                          Alert.alert("Error", error.message);
+                        }
+                      }}
+                    />
+                  )}
+
+                  {listType == 'queue' && (
+                    <CustomIcon
+                    name="trash"
+                    styles="mr-4"
+                    handlePress={async () => {
+                      try {
+                        await concert.removeSongQueue(item.song_name, item.song_artist);
+                        Alert.alert("Success", "Song removed from queue");
+                      } catch (error) {
+                        Alert.alert("Error", error.message);
+                      }
+                    }}
+                    />
+                  )}
 
                   {item.status == 'accepted' &&
                     <CustomIcon
