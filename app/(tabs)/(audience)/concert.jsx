@@ -6,7 +6,6 @@ import Concert from '@/api/Concert'
 import SongSheet from '@/components/SongSheet'
 
 const AudienceConcert = () => {
-  const concert = new Concert();
   const bottomSheetRef = useRef(null);
 
   return (
@@ -14,25 +13,18 @@ const AudienceConcert = () => {
       <Canvas>
 
         <ListComponent
-          data={concert.getSongRequests()}
-          order_by="request_id"
-          header_text="Songs requested by audience"
-          add={true}
+          listType="requests"
           bottomSheetRef={bottomSheetRef}
         >
 
         </ListComponent>
 
         <ListComponent
-          data={concert.getSongQueue()}
-          order_by="date_created"
-          header_text="Songs artist will play"
+          listType="queue"
         />
 
         <ListComponent
-          data={concert.getSongsPlayed()}
-          order_by="played_element_id"
-          header_text="Songs artist already played"
+          listType="played"
         />
 
       </Canvas>

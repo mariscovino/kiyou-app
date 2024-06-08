@@ -1,28 +1,68 @@
 import { FlatList, Text, View, Alert } from 'react-native'
 import { useGlobalContext } from '@/context/GlobalProvider';
+import { useState } from 'react';
 import SongCard from './SongCard';
 import CustomIcon from './CustomIcon';
 import Concert from '@/api/Concert';
+import User from '@/api/User';
 
-const ListComponent = ({ data, order_by, header_text, listType, add, bottomSheetRef, children }) => {
+const ListComponent = ({ listType, bottomSheetRef }) => {
   const handleOpenPress = () => bottomSheetRef.current?.expand();
-  const { refresh } = useGlobalContext();
   const concert = new Concert();
+  const songQueue = concert.getSongQueue();
+  const songRequests = concert.getSongRequests();
+  const songsPlayed = concert.getSongsPlayed();
+  const { extraData, setExtraData } = useGlobalContext();
+  const isArtist = concert.isArtist();
+
+  var data
+  var orderBy
+  var headerText
+  var add
+
+  if (listType == 'requests') {
+    data = songRequests;
+    orderBy = 'request_id';
+    headerText = "Songs requested by audience";
+
+    if (!isArtist) {
+      add = true;
+    }
+
+  } else if (listType == 'queue') {
+    orderBy = 'date_created';
+    data = songQueue;
+
+    if (isArtist) {
+      headerText = "Songs you will play";
+      add = true;
+    } else {
+      headerText = "Songs artist will play";
+    }
+  } else {
+    data = songsPlayed;
+    orderBy = 'played_element_id';
+
+    if (isArtist) {
+      headerText = "Songs you already played";
+    } else {
+      headerText = "Songs artist already played";
+    }
+  }
 
   return (
       <View>
           <FlatList
               data={data}
-              keyExtractor={(item) => item[order_by]}
+              extraData={extraData}
+              // keyExtractor={(item) => item.orderBy}
               scrollEnabled={false}
-              extraData={refresh}
               renderItem={({ item }) => (
 
                   <SongCard
                     name={item.song_name}
                     artist={item.song_artist}
                   >
-                  { children }
 
                   {listType == 'requests' && (
                     <CustomIcon
@@ -54,7 +94,7 @@ const ListComponent = ({ data, order_by, header_text, listType, add, bottomSheet
                     />
                   )}
 
-                  {listType == 'queue' && (
+                  {(listType == 'queue' && isArtist) && (
                       <CustomIcon
                       name="check"
                       styles="mr-4"
@@ -70,13 +110,15 @@ const ListComponent = ({ data, order_by, header_text, listType, add, bottomSheet
                     />
                   )}
 
-                  {listType == 'queue' && (
+                  {(listType == 'queue' && isArtist) && (
                     <CustomIcon
                     name="trash"
                     styles="mr-4"
                     handlePress={async () => {
                       try {
                         await concert.removeSongQueue(item.song_name, item.song_artist);
+                        const {data: refetch} = await concert.getSongQueueAsync();
+                        setExtraData([...refetch]);
                         Alert.alert("Success", "Song removed from queue");
                       } catch (error) {
                         Alert.alert("Error", error.message);
@@ -112,7 +154,7 @@ const ListComponent = ({ data, order_by, header_text, listType, add, bottomSheet
               ListHeaderComponent={() => (
                   <View className='flex items-center flex-row flex-1'>
                     <Text className="text-lg font-semibold text-gray-100 my-6">
-                    {header_text}
+                    {headerText}
                     </Text>
                     {add && (
                       <CustomIcon

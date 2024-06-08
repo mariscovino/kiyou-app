@@ -17,26 +17,26 @@ const SongSheet = ({ bottomSheetRef, submitType }) => {
         song_name: "",
         song_artist: "",
       });
-    const { setRefresh } = useGlobalContext();
+      // const refetch = concert.getSongQueue();
+      const { extraData, setExtraData } = useGlobalContext();
 
       const submit = async () => {
         try {
           if (submitType === "queue") {
               
               await concert.createSongQueue(form.song_name, form.song_artist);
-              const refetch = await concert.getSongQueueAsync();
-              setRefresh(() => {
-                  return refetch;
-              });
+              const {data: refetch} = await concert.getSongQueueAsync();
+              setExtraData([...refetch]);
           } else if (submitType === "requests") {
               await concert.createSongRequest(form.song_name, form.song_artist);
-              setRefresh(concert.getSongRequests());
+              setExtraData(concert.getSongRequests());
           } else {
               await concert.createSongsPlayed(form.song_name, form.song_artist);
-              setRefresh(concert.getSongsPlayed());
+              setExtraData(concert.getSongsPlayed());
           }
   
           Alert.alert("Success", "Song added successfully");
+          setForm({ song_name: "", song_artist: "" });
 
           handleClosePress();
         } catch (error) {
@@ -81,7 +81,9 @@ const SongSheet = ({ bottomSheetRef, submitType }) => {
 
                     <CustomButton
                         title="Submit"
-                        handlePress={submit}
+                        handlePress={async () =>{
+                          await submit();
+                        }}
                         containerStyles="mt-7"
                     />
                 </View>

@@ -4,12 +4,14 @@ import getData from "./getData";
 
 export default class Concert {
   private pin: number;
-  private email: string;
+  private artist_email: string;
+  private user_email: string;
 
-  public constructor() {
+  constructor() {
     const { concert, user } = useGlobalContext();
-    this.pin = concert?.pin;
-    this.email = user?.email;
+    this.pin = concert.pin;
+    this.artist_email = concert.artist_email;
+    this.user_email = user.email;
   }
 
   public getSongRequests() {
@@ -28,12 +30,20 @@ export default class Concert {
     return await client.post("/concerts/getSongQueue", { "pin": this.pin });
   }
 
+  public getEmail() {
+    return this.artist_email;
+  }
+
+  public isArtist() {
+    return this.artist_email == this.user_email;
+  }
+
   public async createSongRequests(song_name: string, song_artist: string) {
     return await client.post("/concert/list/createSongRequests", {
       "pin": this.pin,
       "song_name": song_name,
       "song_artist": song_artist,
-      "email": this.email
+      "email": this.user_email
     });
   }
 
