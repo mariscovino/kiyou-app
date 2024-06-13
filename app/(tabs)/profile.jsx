@@ -7,22 +7,20 @@ import { useGlobalContext } from "../../context/GlobalProvider";
 import client from '@/api/client.js';
 import getData from '@/api/getData.js'
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import User from "@/api/User";
+import User from '@/api/User';
 
 const Profile = () => {
-  const { setUser, setIsLogged } = useGlobalContext();
-  const user = User.getInstance();
-  
+  const { user, setUser, setIsLogged } = useGlobalContext();
+  const globalUser = User.getInstance(user);
+
   const logout = async () => {
     try {
-      await AsyncStorage.removeItem('email');
-  
-      await user.signOut();
-  
+      await globalUser.signOut();
+
       setUser(null);
       setIsLogged(false);
-  
-      router.push("/sign-in");
+
+      router.push('/sign-in');
     } catch (error) {
       Alert.alert("Error", error.message);
     }
@@ -44,20 +42,20 @@ const Profile = () => {
 
             <View className="w-16 h-16 border border-secondary rounded-lg flex justify-center items-center">
               <Image
-                source={{ uri: user?.avatar }}
+                source={{ uri: null }}
                 className="w-[90%] h-[90%] rounded-lg"
                 resizeMode="cover"
               />
             </View>
 
             <InfoBox
-              title={user.getName()}
+              title={globalUser.getName()}
               containerStyles="mt-5"
               titleStyles="text-lg"
             />
 
             <InfoBox
-              title={user.getAllConcerts().length || 0}
+              title={globalUser.getAllConcerts().length || 0}
               subtitle="Concerts"
               titleStyles="text-xl"
             />

@@ -10,7 +10,7 @@ const GlobalProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [concert, setConcert] = useState(null);
-  const [extraData, setExtraData] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   const fetchUser = async () => {
     setLoading(true);
@@ -48,8 +48,8 @@ const GlobalProvider = ({ children }) => {
         setLoading,
         concert,
         setConcert,
-        extraData,
-        setExtraData
+        refreshing,
+        setRefreshing
       }}
     >
       {children}

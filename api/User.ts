@@ -1,36 +1,28 @@
-import { useState } from "react";
-import { Alert } from "react-native";
 import { useGlobalContext } from "@/context/GlobalProvider";
-import { router } from "expo-router";
 import client from "./client";
 import getData from '@/api/getData.js'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from "expo-router";
 
 export default class User {
-  static #instance: User;
+  private static instance: User;
   private name: string;
   private last_name: string;
   private email: string;
   private password: string;
-
-  private constructor() {
-    const { user } = useGlobalContext();
-    
+  
+  private constructor(user: any) {
     this.name = user?.name;
     this.last_name = user?.last_name;
     this.email = user?.email;
     this.password = user?.password;
   }
 
-  public static getInstance() {
-    const newUser = new User();
-
-    if (!User.#instance) {
-      User.#instance = newUser;
+  public static getInstance(user: any) {
+    if (!User.instance) {
+      User.instance = new User(user);
     }
-
-    return User.#instance;
-    
+    return User.instance;
   }
 
   public getName() {
@@ -41,10 +33,7 @@ export default class User {
     return this.email;
   }
 
-  public async signIn(email: string, password: string) {
-    this.email = email;
-    this.password = password;
-
+  public static async signIn(email: string, password: string) {
     await client.post("/users/signIn", {
       "email": email,
       "password": password
@@ -54,13 +43,8 @@ export default class User {
 
     return await client.post('/users/getUser', { "email": email });
   }
-  
-  public async signUp(name: string, last_name: string, email: string, password: string) {
-    this.name = name;
-    this.last_name = last_name;
-    this.email = email;
-    this.password = password;
-    
+
+  public static async signUp(name: string, last_name: string, email: string, password: string) {
     await client.post("/users/signUp", {
       "name": name,
       "last_name": last_name,
@@ -74,7 +58,11 @@ export default class User {
   }
 
   public async signOut() {
-    return await client.post("/users/signOut", { "email": this.email });
+    const email = this.email;
+
+    await client.post("/users/signOut", { "email": email });
+
+    await AsyncStorage.removeItem('email');
   }
 
   public getArtistConcerts() {

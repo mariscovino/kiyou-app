@@ -4,16 +4,16 @@ import { useState } from 'react';
 import SongCard from './SongCard';
 import CustomIcon from './CustomIcon';
 import Concert from '@/api/Concert';
-import User from '@/api/User';
 
 const ListComponent = ({ listType, bottomSheetRef }) => {
+  const { user, concert, refreshing } = useGlobalContext();
   const handleOpenPress = () => bottomSheetRef.current?.expand();
-  const concert = new Concert();
-  const songQueue = concert.getSongQueue();
-  const songRequests = concert.getSongRequests();
-  const songsPlayed = concert.getSongsPlayed();
-  const { extraData, setExtraData } = useGlobalContext();
-  const isArtist = concert.isArtist();
+  const globalConcert = new Concert(concert, user);
+  var songQueue = globalConcert.getSongQueue();
+  var songRequests = globalConcert.getSongRequests();
+  var songsPlayed = globalConcert.getSongsPlayed();
+  var isArtist = globalConcert.isArtist();
+  
 
   var data
   var orderBy
@@ -50,12 +50,23 @@ const ListComponent = ({ listType, bottomSheetRef }) => {
     }
   }
 
+  const refreshControl = () => {
+    try {
+      globalConcert.getSongQueue();
+      globalConcert.getSongRequests();
+      globalConcert.getSongsPlayed();
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    }
+  }
+
   return (
       <View>
           <FlatList
               data={data}
-              extraData={extraData}
               // keyExtractor={(item) => item.orderBy}
+              refreshing={refreshing}
+              onRefresh={() => refreshControl()}
               scrollEnabled={false}
               renderItem={({ item }) => (
 
@@ -70,7 +81,7 @@ const ListComponent = ({ listType, bottomSheetRef }) => {
                     styles="mr-4"
                     handlePress={async () => {
                       try {
-                        await concert.acceptSong(item.song_name, item.song_artist);
+                        await globalConcert.acceptSong(item.song_name, item.song_artist);
                         Alert.alert("Success", "Song request accepted");
                       } catch (error) {
                         Alert.alert("Error", error.message);
@@ -85,7 +96,7 @@ const ListComponent = ({ listType, bottomSheetRef }) => {
                       styles="mr-4"
                       handlePress={async () => {
                         try {
-                          await concert.denySong(item.song_name, item.song_artist);
+                          await globalConcert.denySong(item.song_name, item.song_artist);
                           Alert.alert("Success", "Song request denied");
                         } catch (error) {
                           Alert.alert("Error", error.message);
@@ -100,8 +111,8 @@ const ListComponent = ({ listType, bottomSheetRef }) => {
                       styles="mr-4"
                       handlePress={async () => {
                         try {
-                          await concert.createSongsPlayed(item.song_name, item.song_artist);
-                          await concert.removeSongQueue(item.song_name, item.song_artist);
+                          await globalConcert.createSongsPlayed(item.song_name, item.song_artist);
+                          await globalConcert.removeSongQueue(item.song_name, item.song_artist);
                           Alert.alert("Success", "Song added to songs played list");
                         } catch (error) {
                           Alert.alert("Error", error.message);
@@ -116,9 +127,7 @@ const ListComponent = ({ listType, bottomSheetRef }) => {
                     styles="mr-4"
                     handlePress={async () => {
                       try {
-                        await concert.removeSongQueue(item.song_name, item.song_artist);
-                        const {data: refetch} = await concert.getSongQueueAsync();
-                        setExtraData([...refetch]);
+                        await globalConcert.removeSongQueue(item.song_name, item.song_artist);
                         Alert.alert("Success", "Song removed from queue");
                       } catch (error) {
                         Alert.alert("Error", error.message);

@@ -1,4 +1,3 @@
-import { useGlobalContext } from "@/context/GlobalProvider";
 import client from "./client";
 import getData from "./getData";
 
@@ -7,8 +6,7 @@ export default class Concert {
   private artist_email: string;
   private user_email: string;
 
-  constructor() {
-    const { concert, user } = useGlobalContext();
+  constructor(concert: any, user: any) {
     this.pin = concert.pin;
     this.artist_email = concert.artist_email;
     this.user_email = user.email;

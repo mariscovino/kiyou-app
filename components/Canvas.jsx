@@ -1,13 +1,30 @@
-import { SafeAreaView, ScrollView, Image, Text, View } from 'react-native'
+import { SafeAreaView, ScrollView, Image, Text, View, RefreshControl } from 'react-native'
 import { useGlobalContext } from "@/context/GlobalProvider";
 import images from "@/constants/images";
 
 const Canvas = ({ children }) => {
-    const { user } = useGlobalContext();
+    const { user, refreshing, setRefreshing } = useGlobalContext();
+
+    const refreshControl = () => {
+        setRefreshing(true);
+
+        setTimeout(() => {
+            setRefreshing(false);
+        }, 4000);
+    }
 
   return (
     <SafeAreaView className='bg-primary h-full'>
-      <ScrollView className='my-6 px-4'>
+      <ScrollView 
+        className='my-6 px-4'
+        refreshControl={
+            <RefreshControl
+                refreshing={refreshing}
+                onRefresh={() => refreshControl()}
+                tintColor="#ffffff"
+                colors={["#ffffff"]}
+            />
+        }>
         <View className='justify-between items-start flex-row mb-6'>
             <View>
                 <Text className='font-medium text-sm text-gray-100'>Welcome Back</Text>

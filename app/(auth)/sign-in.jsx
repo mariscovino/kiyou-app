@@ -6,10 +6,8 @@ import images from "../../constants/images";
 import CustomButton from "../../components/CustomButton";
 import FormField from "../../components/FormField";
 import { useGlobalContext } from "../../context/GlobalProvider";
-import User from "@/api/User";
-import client from "@/api/client";
 import { KeyboardAvoidingView } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import User from "@/api/User";
 
 const SignIn = () => {
   const { setUser, setIsLogged } = useGlobalContext();
@@ -27,10 +25,11 @@ const SignIn = () => {
     setSubmitting(true);
 
     try {
-      // const result = await User.getInstance().signIn(form.email, form.password);
-      await client.post('/users/signIn', form);
-      const result = await client.post('/users/getUser', { "email": form.email });
-      AsyncStorage.setItem('email', form.email);
+      // await client.post('/users/signIn', form);
+      // const result = await client.post('/users/getUser', { "email": form.email });
+      const result = await User.signIn(form.email, form.password);
+
+      // AsyncStorage.setItem('email', form.email);
 
       setUser(result.data);
       setIsLogged(true);
@@ -44,7 +43,7 @@ const SignIn = () => {
   };
 
   return (
-    <SafeAreaView className="h-full bg-[#161622]">
+    <SafeAreaView className="h-full bg-primary">
       <KeyboardAvoidingView
         enabled
         className='flex-1'

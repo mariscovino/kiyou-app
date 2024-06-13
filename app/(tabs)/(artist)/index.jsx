@@ -1,29 +1,25 @@
-import { Text, View, FlatList, ScrollView, Alert } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { Text, View, Alert } from 'react-native'
 import SearchInput from "@/components/SearchInput"
-import ConcertCard from '@/components/ConcertCard'
 import CustomButton from '@/components/CustomButton'
 import { useGlobalContext } from "@/context/GlobalProvider"
 import { router } from 'expo-router'
 import FormField from '@/components/FormField'
 import { useState } from 'react'
-import client from '@/api/client.js'
-import getData from '@/api/getData.js'
 import Canvas from '@/components/Canvas'
 import ConcertList from '@/components/ConcertList'
-import User from "@/api/User"
+import User from '@/api/User'
 
 const Artist = () => {
-    const user = User.getInstance();
-    const { setConcert } = useGlobalContext();
+    const { user, setConcert } = useGlobalContext();
     const [form, setForm] = useState({
       name: "",
     });
+    const globalUser = User.getInstance(user);
   
     const create = async () => {
       if (form.name != "") {
         try {
-          const concert = await user.createConcert(form.name);
+          const concert = await globalUser.createConcert(form.name);
           setConcert(concert.data);
           router.replace("/../(artist)/concert");
         } catch (error) {
@@ -57,7 +53,7 @@ const Artist = () => {
         />
 
         <ConcertList
-          data={user.getArtistConcerts()}
+          data={globalUser.getArtistConcerts()}
         />
       </Canvas>
     )

@@ -1,5 +1,4 @@
-import { Text, View, FlatList, ScrollView, Alert } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { Text, Alert } from 'react-native'
 import SearchInput from "@/components/SearchInput";
 import CustomButton from '@/components/CustomButton';
 import { useGlobalContext } from "@/context/GlobalProvider";
@@ -8,18 +7,19 @@ import FormField from '@/components/FormField';
 import { useState } from 'react';
 import Canvas from '@/components/Canvas'
 import ConcertList from '@/components/ConcertList'
-import User from "@/api/User"
+import User from '@/api/User';
 
 const Audience = () => {
-    const { setConcert } = useGlobalContext();
+    const { user, setConcert } = useGlobalContext();
     const [form, setForm] = useState({
       pin: "",
     });
+    const globalUser = User.getInstance(user);
     
     const join = async () => {
         if (form.pin != "") {
             try {
-            const concert = await User.joinConcert(form.pin);
+            const concert = await globalUser.joinConcert(form.pin);
             setConcert(concert.data);
             router.replace("/../(audience)/concert");
             } catch (error) {
@@ -51,7 +51,7 @@ const Audience = () => {
           />
 
           <ConcertList
-            data={User.getInstance().getAudienceConcerts()}
+            data={globalUser.getAudienceConcerts()}
           />
 
     </Canvas>

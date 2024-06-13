@@ -10,29 +10,23 @@ import Concert from '@/api/Concert';
 
 
 const SongSheet = ({ bottomSheetRef, submitType }) => {
-    const concert = new Concert();
+    const { user, concert } = useGlobalContext();
+    const globalConcert = new Concert(concert, user);
     const snapPoints = useMemo(() => ['40%', '50%', '70%'], []);
     const handleClosePress = () => bottomSheetRef.current?.close();
     const [form, setForm] = useState({
         song_name: "",
         song_artist: "",
       });
-      // const refetch = concert.getSongQueue();
-      const { extraData, setExtraData } = useGlobalContext();
 
       const submit = async () => {
         try {
           if (submitType === "queue") {
-              
-              await concert.createSongQueue(form.song_name, form.song_artist);
-              const {data: refetch} = await concert.getSongQueueAsync();
-              setExtraData([...refetch]);
+              await globalConcert.createSongQueue(form.song_name, form.song_artist);
           } else if (submitType === "requests") {
-              await concert.createSongRequest(form.song_name, form.song_artist);
-              setExtraData(concert.getSongRequests());
+              await globalConcert.createSongRequest(form.song_name, form.song_artist);
           } else {
-              await concert.createSongsPlayed(form.song_name, form.song_artist);
-              setExtraData(concert.getSongsPlayed());
+              await globalConcert.createSongsPlayed(form.song_name, form.song_artist);
           }
   
           Alert.alert("Success", "Song added successfully");

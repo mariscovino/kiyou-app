@@ -26,7 +26,7 @@ const SignUp = () => {
 
     setSubmitting(true);
     try {
-      const result = await User.getInstance().signUp(form.name, form.last_name, form.email, form.password);
+      const result = await User.signUp(form.name, form.last_name, form.email, form.password);
 
       setUser(result.data);
       setIsLogged(true);

@@ -1,17 +1,17 @@
-import { useGlobalContext } from "../../context/GlobalProvider";
+import { useGlobalContext } from "@/context/GlobalProvider";
 import SearchInput from "../../components/SearchInput";
 import Canvas from "../../components/Canvas";
 import ConcertList from '../../components/ConcertList'
-import getData from '@/api/getData.js'
 import User from "@/api/User";
 
 const Home = () => {
+  const { user } = useGlobalContext();
 
   return (
     <Canvas>
       <SearchInput />
       <ConcertList
-        data={User.getInstance().getAllConcerts()}
+        data={User.getInstance(user).getAllConcerts()}
       />
     </Canvas>
   )
