@@ -1,6 +1,6 @@
 import { View, Text } from "react-native";
 
-const SongCard = ({ name, artist, children }) => {
+const SongCard = ({ name, artist, children }: any) => {
 
   return (
     <View className="flex flex-col items-center mb-6">

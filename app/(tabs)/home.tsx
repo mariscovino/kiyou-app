@@ -3,6 +3,8 @@ import SearchInput from "../../components/SearchInput";
 import Canvas from "../../components/Canvas";
 import ConcertList from '../../components/ConcertList'
 import User from "@/api/User";
+import { GlobalContextType } from "@/context/GlobalContextType";
+import { useContext } from "react";
 
 const Home = () => {
   const { user } = useGlobalContext();

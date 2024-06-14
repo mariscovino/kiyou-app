@@ -21,7 +21,7 @@ const Profile = () => {
       setIsLogged(false);
 
       router.push('/sign-in');
-    } catch (error) {
+    } catch (error: any) {
       Alert.alert("Error", error.message);
     }
   };
@@ -42,7 +42,7 @@ const Profile = () => {
 
             <View className="w-16 h-16 border border-secondary rounded-lg flex justify-center items-center">
               <Image
-                source={{ uri: null }}
+                source={{  }}
                 className="w-[90%] h-[90%] rounded-lg"
                 resizeMode="cover"
               />

@@ -1,7 +1,7 @@
 import { TouchableOpacity } from 'react-native'
 import Octicons from '@expo/vector-icons/Octicons'
 
-const CustomIcon = ({ name, styles, handlePress }) => {
+const CustomIcon = ({ name, styles, handlePress }: any) => {
   return (
     <TouchableOpacity
         className={styles}

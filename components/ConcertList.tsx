@@ -2,8 +2,9 @@ import { FlatList, Text } from 'react-native'
 import { useGlobalContext } from "@/context/GlobalProvider";
 import { router } from 'expo-router';
 import ConcertCard from "@/components/ConcertCard";
+import Concert from '@/api/Concert';
 
-const ConcertList = (data) => {
+const ConcertList = (data: any) => {
     const { user, setConcert } = useGlobalContext();
 
   return (
@@ -16,7 +17,7 @@ const ConcertList = (data) => {
             name={item.concert_name}
             artist={item.artist_email}
             handlePress={() => {
-                setConcert(item);
+                setConcert(new Concert(item, user));
                 if (item.artist_email == user.email) {
                     router.replace("/../(artist)/concert");
                 } else {

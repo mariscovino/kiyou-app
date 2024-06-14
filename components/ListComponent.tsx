@@ -3,22 +3,20 @@ import { useGlobalContext } from '@/context/GlobalProvider';
 import { useState } from 'react';
 import SongCard from './SongCard';
 import CustomIcon from './CustomIcon';
-import Concert from '@/api/Concert';
 
-const ListComponent = ({ listType, bottomSheetRef }) => {
-  const { user, concert, refreshing } = useGlobalContext();
+const ListComponent = ({ listType, bottomSheetRef }: any) => {
+  const { concert } = useGlobalContext();
   const handleOpenPress = () => bottomSheetRef.current?.expand();
-  const globalConcert = new Concert(concert, user);
-  var songQueue = globalConcert.getSongQueue();
-  var songRequests = globalConcert.getSongRequests();
-  var songsPlayed = globalConcert.getSongsPlayed();
-  var isArtist = globalConcert.isArtist();
+  var songQueue = concert?.getSongQueue();
+  var songRequests = concert?.getSongRequests();
+  var songsPlayed = concert?.getSongsPlayed();
+  var isArtist = concert?.isArtist();
   
 
   var data
   var orderBy
-  var headerText
-  var add
+  var headerText: string
+  var add: boolean
 
   if (listType == 'requests') {
     data = songRequests;
@@ -50,25 +48,27 @@ const ListComponent = ({ listType, bottomSheetRef }) => {
     }
   }
 
-  const refreshControl = () => {
-    try {
-      globalConcert.getSongQueue();
-      globalConcert.getSongRequests();
-      globalConcert.getSongsPlayed();
-    } catch (error) {
-      Alert.alert("Error", error.message);
+  function removeItem(arr: any, name: string, artist: string) {
+    var i = 0;
+    while (i < arr.length) {
+      if (arr[i].song_name === name && arr[i].song_artist == artist) {
+        arr.splice(i, 1);
+      } else {
+        ++i;
+      }
     }
+    return arr;
   }
+
 
   return (
       <View>
           <FlatList
               data={data}
               // keyExtractor={(item) => item.orderBy}
-              refreshing={refreshing}
-              onRefresh={() => refreshControl()}
               scrollEnabled={false}
-              renderItem={({ item }) => (
+              renderItem={({ item }: any) => (
+                console.log(item),
 
                   <SongCard
                     name={item.song_name}
@@ -81,9 +81,11 @@ const ListComponent = ({ listType, bottomSheetRef }) => {
                     styles="mr-4"
                     handlePress={async () => {
                       try {
-                        await globalConcert.acceptSong(item.song_name, item.song_artist);
+                        await concert?.acceptSong(item.song_name, item.song_artist);
+
+                        removeItem(songRequests, item.song_name, item.song_artist);
                         Alert.alert("Success", "Song request accepted");
-                      } catch (error) {
+                      } catch (error: any) {
                         Alert.alert("Error", error.message);
                       }
                     }}
@@ -96,9 +98,9 @@ const ListComponent = ({ listType, bottomSheetRef }) => {
                       styles="mr-4"
                       handlePress={async () => {
                         try {
-                          await globalConcert.denySong(item.song_name, item.song_artist);
+                          await concert?.denySong(item.song_name, item.song_artist);
                           Alert.alert("Success", "Song request denied");
-                        } catch (error) {
+                        } catch (error: any) {
                           Alert.alert("Error", error.message);
                         }
                       }}
@@ -111,10 +113,12 @@ const ListComponent = ({ listType, bottomSheetRef }) => {
                       styles="mr-4"
                       handlePress={async () => {
                         try {
-                          await globalConcert.createSongsPlayed(item.song_name, item.song_artist);
-                          await globalConcert.removeSongQueue(item.song_name, item.song_artist);
+                          await concert?.createSongsPlayed(item.song_name, item.song_artist);
+                          
+                          await concert?.removeSongQueue(item.song_name, item.song_artist);
+                          removeItem(songQueue, item.song_name, item.song_artist);
                           Alert.alert("Success", "Song added to songs played list");
-                        } catch (error) {
+                        } catch (error: any) {
                           Alert.alert("Error", error.message);
                         }
                       }}
@@ -127,9 +131,12 @@ const ListComponent = ({ listType, bottomSheetRef }) => {
                     styles="mr-4"
                     handlePress={async () => {
                       try {
-                        await globalConcert.removeSongQueue(item.song_name, item.song_artist);
+                        await concert?.removeSongQueue(item.song_name, item.song_artist);
+
+                        removeItem(songQueue, item.song_name, item.song_artist);
+
                         Alert.alert("Success", "Song removed from queue");
-                      } catch (error) {
+                      } catch (error: any) {
                         Alert.alert("Error", error.message);
                       }
                     }}

@@ -9,9 +9,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Concert from '@/api/Concert';
 
 
-const SongSheet = ({ bottomSheetRef, submitType }) => {
-    const { user, concert } = useGlobalContext();
-    const globalConcert = new Concert(concert, user);
+const SongSheet = ({ bottomSheetRef, submitType }: any) => {
+    const { concert } = useGlobalContext();
     const snapPoints = useMemo(() => ['40%', '50%', '70%'], []);
     const handleClosePress = () => bottomSheetRef.current?.close();
     const [form, setForm] = useState({
@@ -22,18 +21,18 @@ const SongSheet = ({ bottomSheetRef, submitType }) => {
       const submit = async () => {
         try {
           if (submitType === "queue") {
-              await globalConcert.createSongQueue(form.song_name, form.song_artist);
+              await concert?.createSongQueue(form.song_name, form.song_artist);
           } else if (submitType === "requests") {
-              await globalConcert.createSongRequest(form.song_name, form.song_artist);
+              await concert?.createSongRequests(form.song_name, form.song_artist);
           } else {
-              await globalConcert.createSongsPlayed(form.song_name, form.song_artist);
+              await concert?.createSongsPlayed(form.song_name, form.song_artist);
           }
   
           Alert.alert("Success", "Song added successfully");
           setForm({ song_name: "", song_artist: "" });
 
           handleClosePress();
-        } catch (error) {
+        } catch (error: any) {
             Alert.alert("Error", error.message);
         }
       }
@@ -63,13 +62,13 @@ const SongSheet = ({ bottomSheetRef, submitType }) => {
                     <FormField
                         title="Song name"
                         value={form.song_name}
-                        handleChangeText={(e) => setForm({ ...form, song_name: e })}
+                        handleChangeText={(e: any) => setForm({ ...form, song_name: e })}
                     />
 
                     <FormField
                         title="Song artist"
                         value={form.song_artist}
-                        handleChangeText={(e) => setForm({ ...form, song_artist: e })}
+                        handleChangeText={(e: any) => setForm({ ...form, song_artist: e })}
                         otherStyles="mt-7"
                     />
 

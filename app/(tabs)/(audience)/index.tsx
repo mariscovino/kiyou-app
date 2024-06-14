@@ -7,22 +7,21 @@ import FormField from '@/components/FormField';
 import { useState } from 'react';
 import Canvas from '@/components/Canvas'
 import ConcertList from '@/components/ConcertList'
-import User from '@/api/User';
+import Concert from '@/api/Concert'
 
 const Audience = () => {
     const { user, setConcert } = useGlobalContext();
     const [form, setForm] = useState({
       pin: "",
     });
-    const globalUser = User.getInstance(user);
     
     const join = async () => {
         if (form.pin != "") {
             try {
-            const concert = await globalUser.joinConcert(form.pin);
-            setConcert(concert.data);
+            const concert = await user.joinConcert(form.pin);
+            setConcert(new Concert(concert.data, user));
             router.replace("/../(audience)/concert");
-            } catch (error) {
+            } catch (error: any) {
             Alert.alert("Error", error.message);
             }
         } else {
@@ -40,7 +39,7 @@ const Audience = () => {
             <FormField
               title="Concert pin"
               value={form.pin}
-              handleChangeText={(e) => setForm({ ...form, pin: e })}
+              handleChangeText={(e: any) => setForm({ ...form, pin: e })}
               otherStyles="mt-3"
             />
 
@@ -51,7 +50,7 @@ const Audience = () => {
           />
 
           <ConcertList
-            data={globalUser.getAudienceConcerts()}
+            data={user.getAudienceConcerts()}
           />
 
     </Canvas>

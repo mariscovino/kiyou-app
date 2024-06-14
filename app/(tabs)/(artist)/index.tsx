@@ -7,22 +7,21 @@ import FormField from '@/components/FormField'
 import { useState } from 'react'
 import Canvas from '@/components/Canvas'
 import ConcertList from '@/components/ConcertList'
-import User from '@/api/User'
+import Concert from '@/api/Concert'
 
 const Artist = () => {
     const { user, setConcert } = useGlobalContext();
     const [form, setForm] = useState({
       name: "",
     });
-    const globalUser = User.getInstance(user);
   
     const create = async () => {
       if (form.name != "") {
         try {
-          const concert = await globalUser.createConcert(form.name);
-          setConcert(concert.data);
+          const concert = await user.createConcert(form.name);
+          setConcert(new Concert(concert.data, user));
           router.replace("/../(artist)/concert");
-        } catch (error) {
+        } catch (error: any) {
           Alert.alert("Error", error.message);
         }
       } else {
@@ -42,7 +41,7 @@ const Artist = () => {
         <FormField
             title="Concert name"
             value={form.name}
-            handleChangeText={(e) => setForm({ ...form, name: e })}
+            handleChangeText={(e: any) => setForm({ ...form, name: e })}
             otherStyles="mt-3"
           />
 
@@ -53,7 +52,7 @@ const Artist = () => {
         />
 
         <ConcertList
-          data={globalUser.getArtistConcerts()}
+          data={user.getArtistConcerts()}
         />
       </Canvas>
     )

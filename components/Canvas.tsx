@@ -2,7 +2,7 @@ import { SafeAreaView, ScrollView, Image, Text, View, RefreshControl } from 'rea
 import { useGlobalContext } from "@/context/GlobalProvider";
 import images from "@/constants/images";
 
-const Canvas = ({ children }) => {
+const Canvas = ({ children }: any) => {
     const { user, refreshing, setRefreshing } = useGlobalContext();
 
     const refreshControl = () => {

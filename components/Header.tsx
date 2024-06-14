@@ -1,7 +1,7 @@
 import { View, Text, Image } from 'react-native'
 import images from "@/constants/images";
 
-const Header = ({username}) => {
+const Header = ({username}: any) => {
   return (
     <View className='justify-between items-start flex-row mb-6'>
       <View>

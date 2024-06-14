@@ -1,15 +1,18 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import client from "@/api/client";
+import { GlobalContextType } from './GlobalContextType'
+import User from "@/api/User";
+import Concert from "@/api/Concert";
 
-const GlobalContext = createContext();
-export const useGlobalContext = () => useContext(GlobalContext);
+const GlobalContext = createContext<GlobalContextType | null>(null);
+export const useGlobalContext = () => useContext(GlobalContext) as GlobalContextType;
 
-const GlobalProvider = ({ children }) => {
+const GlobalProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
   const [isLogged, setIsLogged] = useState(false);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [concert, setConcert] = useState(null);
+  const [concert, setConcert] = useState<Concert | null>(null);
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchUser = async () => {
@@ -23,10 +26,10 @@ const GlobalProvider = ({ children }) => {
         setUser(user.data);
         setIsLogged(true);
       } else {
-        setUser({});
+        setUser(null);
         setIsLogged(false);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log(error.message)
     }
 

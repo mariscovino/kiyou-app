@@ -1,41 +1,38 @@
 import { useState } from "react";
 import { Link, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { View, Text, ScrollView, Dimensions, Alert, Image, Platform } from "react-native";
+import { View, Text, ScrollView, Dimensions, Alert, Image, KeyboardAvoidingView, Platform } from "react-native";
+import { useGlobalContext } from "../../context/GlobalProvider";
 import images from "../../constants/images";
 import CustomButton from "../../components/CustomButton";
 import FormField from "../../components/FormField";
-import { useGlobalContext } from "../../context/GlobalProvider";
-import { KeyboardAvoidingView } from "react-native";
+import client from '@/api/client.js'
 import User from "@/api/User";
 
-const SignIn = () => {
+const SignUp = () => {
   const { setUser, setIsLogged } = useGlobalContext();
   const [isSubmitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
+    name: "",
+    last_name: "",
     email: "",
-    password: "",
+    password: ""
   });
 
   const submit = async () => {
-    if (form.email === "" || form.password === "") {
+    if (form.name === "" || form.last_name == "" || form.email === "" || form.password === "") {
       Alert.alert("Error", "Please fill in all fields");
     }
 
     setSubmitting(true);
-
     try {
-      // await client.post('/users/signIn', form);
-      // const result = await client.post('/users/getUser', { "email": form.email });
-      const result = await User.signIn(form.email, form.password);
+      const result = await User.signUp(form.name, form.last_name, form.email, form.password);
 
-      // AsyncStorage.setItem('email', form.email);
-
-      setUser(result.data);
+      setUser(result);
       setIsLogged(true);
-      
-      router.push("/home");
-    } catch (error) {
+
+      router.replace("/home");
+    } catch (error: any) {
       Alert.alert("Error", error.message);
     } finally {
       setSubmitting(false);
@@ -43,7 +40,7 @@ const SignIn = () => {
   };
 
   return (
-    <SafeAreaView className="h-full bg-primary">
+    <SafeAreaView className="h-full bg-[#161622]">
       <KeyboardAvoidingView
         enabled
         className='flex-1'
@@ -63,39 +60,53 @@ const SignIn = () => {
             />
 
             <Text className="text-2xl font-semibold text-white mt-10 font-semibold">
-              Log in to Kiyou
+              Welcome to Kiyou!
             </Text>
+
+              <FormField
+                title="Name"
+                value={form.name}
+                handleChangeText={(e: any) => setForm({ ...form, name: e })}
+                otherStyles="mt-7"
+              />
+
+            <FormField
+              title="Last name"
+              value={form.last_name}
+              handleChangeText={(e: any) => setForm({ ...form, last_name: e })}
+              otherStyles="mt-7"
+            />
 
             <FormField
               title="Email"
               value={form.email}
-              handleChangeText={(e) => setForm({ ...form, email: e })}
+              handleChangeText={(e: any) => setForm({ ...form, email: e })}
               otherStyles="mt-7"
               keyboardType="email-address"
             />
 
-            <FormField
-              title="Password"
-              value={form.password}
-              handleChangeText={(e) => setForm({ ...form, password: e })}
-              otherStyles="mt-7"
-            />
+              <FormField
+                title="Password"
+                value={form.password}
+                handleChangeText={(e: any) => setForm({ ...form, password: e })}
+                otherStyles="mt-7"
+              />
 
             <CustomButton
-              title="Sign In"
+              title="Sign Up"
               handlePress={submit}
               containerStyles="mt-7"
             />
 
             <View className="flex justify-center pt-5 flex-row gap-2">
               <Text className="text-lg text-gray-100 font-regular">
-                Don't have an account?
+                Have an account already?
               </Text>
               <Link
-                href="/sign-up"
+                href="/sign-in"
                 className="text-lg font-semibold text-secondary-200"
               >
-                Signup
+                SignIn
               </Link>
             </View>
           </View>
@@ -105,4 +116,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default SignUp;

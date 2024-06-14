@@ -2,7 +2,7 @@ import { Alert } from "react-native";
 import { useEffect, useState } from "react";
 import client from "./client";
 
-const getData = (url, body) => {
+const getData = (url: string, body: any) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -12,7 +12,7 @@ const getData = (url, body) => {
       const res = await client.post(url, body)
 
       setData(res.data);
-    } catch (error) {
+    } catch (error: any) {
       Alert.alert("Error", error.message);
     } finally {
       setLoading(false);

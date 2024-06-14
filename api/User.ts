@@ -1,15 +1,15 @@
 import { useGlobalContext } from "@/context/GlobalProvider";
 import client from "./client";
-import getData from '@/api/getData.js'
+import getData from '@/api/getData'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from "expo-router";
 
 export default class User {
-  private static instance: User;
-  private name: string;
-  private last_name: string;
-  private email: string;
-  private password: string;
+  static #instance: User;
+  public name: string;
+  public last_name: string;
+  public email: string;
+  public password: string;
   
   private constructor(user: any) {
     this.name = user?.name;
@@ -19,10 +19,10 @@ export default class User {
   }
 
   public static getInstance(user: any) {
-    if (!User.instance) {
-      User.instance = new User(user);
+    if (!User.#instance) {
+      User.#instance = new User(user);
     }
-    return User.instance;
+    return User.#instance;
   }
 
   public getName() {
@@ -41,7 +41,9 @@ export default class User {
 
     await AsyncStorage.setItem('email', email);
 
-    return await client.post('/users/getUser', { "email": email });
+    const userInfo = await client.post('/users/getUser', { "email": email });
+
+    return new User(userInfo.data);
   }
 
   public static async signUp(name: string, last_name: string, email: string, password: string) {
@@ -54,7 +56,9 @@ export default class User {
     
     await AsyncStorage.setItem('email', email);
 
-    return await client.post('/users/getUser', { "email": email });
+    const userInfo = await client.post('/users/getUser', { "email": email });
+
+    return new User(userInfo.data);
   }
 
   public async signOut() {

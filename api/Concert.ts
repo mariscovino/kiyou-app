@@ -1,3 +1,4 @@
+import User from "./User";
 import client from "./client";
 import getData from "./getData";
 
@@ -6,10 +7,11 @@ export default class Concert {
   private artist_email: string;
   private user_email: string;
 
-  constructor(concert: any, user: any) {
+  constructor(concert: any, user: User) {
     this.pin = concert.pin;
     this.artist_email = concert.artist_email;
-    this.user_email = user.email;
+    console.log(user);
+    this.user_email = user.getEmail();
   }
 
   public getSongRequests() {
