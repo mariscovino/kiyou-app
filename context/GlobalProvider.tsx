@@ -23,7 +23,7 @@ const GlobalProvider: React.FC<{children: React.ReactNode}> = ({ children }) => 
       
       if (email != null) {
         const user = await client.post('/users/getUser', { "email": email });
-        setUser(user.data);
+        setUser(new User(user.data));
         setIsLogged(true);
       } else {
         setUser(null);

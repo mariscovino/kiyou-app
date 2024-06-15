@@ -11,11 +11,10 @@ import User from '@/api/User';
 
 const Profile = () => {
   const { user, setUser, setIsLogged } = useGlobalContext();
-  const globalUser = User.getInstance(user);
 
   const logout = async () => {
     try {
-      await globalUser.signOut();
+      await user?.signOut();
 
       setUser(null);
       setIsLogged(false);
@@ -49,13 +48,13 @@ const Profile = () => {
             </View>
 
             <InfoBox
-              title={globalUser.getName()}
+              title={user?.getName()}
               containerStyles="mt-5"
               titleStyles="text-lg"
             />
 
             <InfoBox
-              title={globalUser.getAllConcerts().length || 0}
+              title={user?.getAllConcerts().length || 0}
               subtitle="Concerts"
               titleStyles="text-xl"
             />

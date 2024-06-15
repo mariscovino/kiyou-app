@@ -5,24 +5,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from "expo-router";
 
 export default class User {
-  static #instance: User;
   public name: string;
   public last_name: string;
   public email: string;
   public password: string;
   
-  private constructor(user: any) {
+  public constructor(user: any) {
     this.name = user?.name;
     this.last_name = user?.last_name;
     this.email = user?.email;
     this.password = user?.password;
-  }
-
-  public static getInstance(user: any) {
-    if (!User.#instance) {
-      User.#instance = new User(user);
-    }
-    return User.#instance;
   }
 
   public getName() {

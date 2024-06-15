@@ -13,7 +13,7 @@ const Home = () => {
     <Canvas>
       <SearchInput />
       <ConcertList
-        data={User.getInstance(user).getAllConcerts()}
+        data={user?.getAllConcerts()}
       />
     </Canvas>
   )

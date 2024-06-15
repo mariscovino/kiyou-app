@@ -13,5 +13,5 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
-, "app/index.tsx", "app/(auth)/sign-in.tsx", "app/(auth)/sign-up.tsx", "app/_layout.tsx", "app/(tabs)/home.tsx", "app/(tabs)/profile.tsx", "app/(auth)/_layout.tsx", "api/client.js", "components/ConcertCard.jsx", "context/GlobalProvider.ts"  ]
+, "app/index.tsx", "app/(auth)/sign-in.tsx", "app/(auth)/sign-up.tsx", "app/_layout.tsx", "app/(tabs)/home.tsx", "app/(tabs)/profile.tsx", "app/(auth)/_layout.tsx", "api/client.js", "components/ConcertCard.tsx", "context/GlobalProvider.ts"  ]
 }

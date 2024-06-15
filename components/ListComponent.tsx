@@ -68,7 +68,6 @@ const ListComponent = ({ listType, bottomSheetRef }: any) => {
               // keyExtractor={(item) => item.orderBy}
               scrollEnabled={false}
               renderItem={({ item }: any) => (
-                console.log(item),
 
                   <SongCard
                     name={item.song_name}
