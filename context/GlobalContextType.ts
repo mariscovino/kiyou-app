@@ -12,4 +12,10 @@ export type GlobalContextType = {
     setConcert: (concert: Concert | null) => void;
     refreshing: boolean;
     setRefreshing: (refreshing: boolean) => void;
+    songRequestsExtraData: any;
+    setSongRequestsExtraData: (extraData: any) => void;
+    songQueueExtraData: any;
+    setSongQueueExtraData: (extraData: any) => void;
+    songsPlayedExtraData: any;
+    setSongsPlayedExtraData: (extraData: any) => void;
 };

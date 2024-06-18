@@ -10,7 +10,6 @@ export default class Concert {
   constructor(concert: any, user: User) {
     this.pin = concert.pin;
     this.artist_email = concert.artist_email;
-    console.log(user);
     this.user_email = user.getEmail();
   }
 

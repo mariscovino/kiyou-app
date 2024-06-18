@@ -14,6 +14,9 @@ const GlobalProvider: React.FC<{children: React.ReactNode}> = ({ children }) => 
   const [loading, setLoading] = useState(true);
   const [concert, setConcert] = useState<Concert | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [songRequestsExtraData, setSongRequestsExtraData] = useState<any>(null);
+  const [songQueueExtraData, setSongQueueExtraData] = useState<any>(null);
+  const [songsPlayedExtraData, setSongsPlayedExtraData] = useState<any>(null);
 
   const fetchUser = async () => {
     setLoading(true);
@@ -52,7 +55,13 @@ const GlobalProvider: React.FC<{children: React.ReactNode}> = ({ children }) => 
         concert,
         setConcert,
         refreshing,
-        setRefreshing
+        setRefreshing,
+        songRequestsExtraData,
+        setSongRequestsExtraData,
+        songQueueExtraData,
+        setSongQueueExtraData,
+        songsPlayedExtraData,
+        setSongsPlayedExtraData
       }}
     >
       {children}

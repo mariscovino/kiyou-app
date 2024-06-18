@@ -8,9 +8,8 @@ import { Octicons } from '@expo/vector-icons';
 import { SafeAreaView } from "react-native-safe-area-context";
 import Concert from '@/api/Concert';
 
-
 const SongSheet = ({ bottomSheetRef, submitType }: any) => {
-    const { concert } = useGlobalContext();
+    const { concert, setSongRequestsExtraData, setSongQueueExtraData, setSongsPlayedExtraData } = useGlobalContext();
     const snapPoints = useMemo(() => ['40%', '50%', '70%'], []);
     const handleClosePress = () => bottomSheetRef.current?.close();
     const [form, setForm] = useState({
@@ -22,10 +21,13 @@ const SongSheet = ({ bottomSheetRef, submitType }: any) => {
         try {
           if (submitType === "queue") {
               await concert?.createSongQueue(form.song_name, form.song_artist);
+
           } else if (submitType === "requests") {
               await concert?.createSongRequests(form.song_name, form.song_artist);
+
           } else {
               await concert?.createSongsPlayed(form.song_name, form.song_artist);
+
           }
   
           Alert.alert("Success", "Song added successfully");

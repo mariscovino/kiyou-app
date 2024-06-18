@@ -4,8 +4,15 @@ import { useState } from 'react';
 import SongCard from './SongCard';
 import CustomIcon from './CustomIcon';
 
-const ListComponent = ({ listType, bottomSheetRef }: any) => {
-  const { concert } = useGlobalContext();
+const ListComponent = ({ listType, bottomSheetRef }) => {
+  const { 
+    concert, 
+    songRequestsExtraData, 
+    setSongRequestsExtraData, 
+    songQueueExtraData, 
+    setSongQueueExtraData, 
+    songsPlayedExtraData, 
+    setSongsPlayedExtraData } = useGlobalContext();
   const handleOpenPress = () => bottomSheetRef.current?.expand();
   var songQueue = concert?.getSongQueue();
   var songRequests = concert?.getSongRequests();
@@ -15,8 +22,8 @@ const ListComponent = ({ listType, bottomSheetRef }: any) => {
 
   var data
   var orderBy
-  var headerText: string
-  var add: boolean
+  var headerText
+  var add
 
   if (listType == 'requests') {
     data = songRequests;
@@ -48,7 +55,7 @@ const ListComponent = ({ listType, bottomSheetRef }: any) => {
     }
   }
 
-  function removeItem(arr: any, name: string, artist: string) {
+  function removeItem(arr, name, artist) {
     var i = 0;
     while (i < arr.length) {
       if (arr[i].song_name === name && arr[i].song_artist == artist) {
@@ -60,21 +67,44 @@ const ListComponent = ({ listType, bottomSheetRef }: any) => {
     return arr;
   }
 
+  function changeSongStatus(item, status) {
+    var obj = {
+      "concert_id": item.concert_id,
+      "song_name": item.song_name,
+      "song_artist": item.song_artist,
+      "request_id": item.request_id,
+      "user_email": item.user_email,
+      "status": status
+    };
+
+    songRequests.push(obj);
+    
+    if (status == 'accepted') {
+      songQueue.push(obj);
+    }
+  }
+
 
   return (
       <View>
           <FlatList
               data={data}
               // keyExtractor={(item) => item.orderBy}
+              extraData={
+                listType == 'requests' ? songRequestsExtraData : 
+                listType == 'queue' ? songQueueExtraData : 
+                listType == 'played' ? songsPlayedExtraData: 
+                null
+              }
               scrollEnabled={false}
-              renderItem={({ item }: any) => (
+              renderItem={({ item }) => (
 
                   <SongCard
                     name={item.song_name}
                     artist={item.song_artist}
                   >
 
-                  {listType == 'requests' && (
+                  {(listType == 'requests' && isArtist) && (
                     <CustomIcon
                     name="check"
                     styles="mr-4"
@@ -83,23 +113,34 @@ const ListComponent = ({ listType, bottomSheetRef }: any) => {
                         await concert?.acceptSong(item.song_name, item.song_artist);
 
                         removeItem(songRequests, item.song_name, item.song_artist);
+                        changeSongStatus(item, 'accepted');
+                        setSongRequestsExtraData(songRequests);
+                        setSongQueueExtraData(songQueue);
+                        console.log(songQueueExtraData);
+
                         Alert.alert("Success", "Song request accepted");
-                      } catch (error: any) {
+                      } catch (error) {
                         Alert.alert("Error", error.message);
                       }
                     }}
                     />
                   )}
 
-                  {listType == 'requests' && (
+                  {(listType == 'requests' && isArtist) && (
                     <CustomIcon
                       name="x"
                       styles="mr-4"
                       handlePress={async () => {
                         try {
                           await concert?.denySong(item.song_name, item.song_artist);
+
+                          removeItem(songRequests, item.song_name, item.song_artist);
+                          changeSongStatus(item, 'denied');
+                          setSongRequestsExtraData(songRequests);
+                          setSongQueueExtraData(songQueue);
+
                           Alert.alert("Success", "Song request denied");
-                        } catch (error: any) {
+                        } catch (error) {
                           Alert.alert("Error", error.message);
                         }
                       }}
@@ -116,8 +157,11 @@ const ListComponent = ({ listType, bottomSheetRef }: any) => {
                           
                           await concert?.removeSongQueue(item.song_name, item.song_artist);
                           removeItem(songQueue, item.song_name, item.song_artist);
+                          setSongQueueExtraData(songQueue);
+                          songsPlayed?.push(item);
+                          setSongsPlayedExtraData(songsPlayed);
                           Alert.alert("Success", "Song added to songs played list");
-                        } catch (error: any) {
+                        } catch (error) {
                           Alert.alert("Error", error.message);
                         }
                       }}
@@ -133,9 +177,9 @@ const ListComponent = ({ listType, bottomSheetRef }: any) => {
                         await concert?.removeSongQueue(item.song_name, item.song_artist);
 
                         removeItem(songQueue, item.song_name, item.song_artist);
-
+                        setSongQueueExtraData(songQueue);
                         Alert.alert("Success", "Song removed from queue");
-                      } catch (error: any) {
+                      } catch (error) {
                         Alert.alert("Error", error.message);
                       }
                     }}
